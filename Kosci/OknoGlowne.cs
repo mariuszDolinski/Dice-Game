@@ -9,8 +9,6 @@ using System.Windows.Forms;
 
 
 // do poprawki - ostatnią ture moze grac tylko pierwszy gracz
-//             - mozna usunąć gracza w trakcie gry
-//             - przycisk Rozpocznij grę powinien zmienic się na zakoncz grę po rozpoczęciu gry i na odwrót 
 
 namespace Kosci
 {
@@ -73,7 +71,6 @@ namespace Kosci
             showRules = new MojPrzycisk();
             pomoc = new Label();
             about = new Label();
-            rules = false;
 
             losuj = new Random();
             wynikRzutu = new int[5];
@@ -225,10 +222,14 @@ namespace Kosci
             pomoc.TextAlign = ContentAlignment.TopLeft;
             pomoc.Location = new Point(3, showRules.Location.Y + showRules.Height + 10);
             pomoc.Size = new Size(this.Width - 22, 95);
+            pomoc.Text = "1. Przed rozpoczęciem gry dodaj conajmniej jednego gracza.";
+            pomoc.Text += Environment.NewLine;
+            pomoc.Text += "2. Aby dodać gracza kliknij dwa razy w żółty pasek, wpisz jego imię i kliknij Dodaj.";
 
             inicjujGre();
             nrTury.Text = "";
             gra = false;
+            rules = false;
 
             for (int i = 0; i < 5; i++)
             {
@@ -280,12 +281,23 @@ namespace Kosci
         {
             if (iloscGraczy() > 0)
             {
-                gra = true;
-                nrTury.Text = "Tura: " + tura.ToString() + "   Rzuty: " + nrRzutu.ToString();
-                inicjujGre();
+                if(gra == true)
+                {
+                    gra = false;
+                    nowaGra.Text = "Rozpocznij grę";
+                    zakonczGre();
+                }
+                else
+                {
+                    gra = false;
+                    nowaGra.Text = "Zakończ grę";
+                    nrTury.Text = "Tura: " + tura.ToString() + "   Rzuty: " + nrRzutu.ToString();
+                    inicjujGre();
+                }
             }
             else
             {
+                gra = false;
                 MessageBox.Show("Brak graczy !!!");
             }
         }
@@ -307,14 +319,14 @@ namespace Kosci
                     dodaj[i] = 2;
                     gracze[i] = true;
                 }
-                else if (dodaj[i] == 2)
+                else if (dodaj[i] == 2 && gra==false)
                 {
                     dodajGracza[i].Text = "Dodaj";
                     nazwaGracza[i].Text = "";
                     dodaj[i] = 0;
+                    dodajGracza[i].BackColor = SystemColors.Window;
                     gracze[i] = false;
                 }
-
             }
         }
 
@@ -357,6 +369,15 @@ namespace Kosci
                     tab.Tablica[i, 0].BackColor = Color.LightSteelBlue;
                     nazwaGracza[i - 1].BackColor = Color.LemonChiffon;
                 }
+            }
+        }
+
+        private void resetujKoloryGraczy()
+        {
+            for (int i = 1; i < 5; i++)
+            {
+                tab.Tablica[i, 0].BackColor = Color.LightSteelBlue;
+                nazwaGracza[i - 1].BackColor = Color.LemonChiffon;
             }
         }
 
@@ -463,6 +484,7 @@ namespace Kosci
         {
             gra = false;
             nrTury.Text = "Koniec gry !";
+            resetujKoloryGraczy();
             for (int i = 0; i < 5; i++)
             {
                 wybrane[i] = false;
