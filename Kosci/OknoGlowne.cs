@@ -32,7 +32,7 @@ namespace Kosci
         private TextBox[] nazwa;
         private MojPrzycisk[] dodajGracza;
         private Label[] nazwaGracza;
-        //private Label pomoc;
+        private Label pomoc; //etykieta z instrukcją gry
 
         Random losuj;
 
@@ -61,13 +61,13 @@ namespace Kosci
 
             tab = new TablicaWynikow();
             panel = new Panel();
-            panelKL = new Panel();
-            panelKW = new Panel();
+            panelKL = new Panel(); //panel z wylosowanymi koscmi
+            panelKW = new Panel(); //panel z wybranymi koscmi
             panelGra = new Panel();
             nrTury = new Label();
             rzut = new MojPrzycisk();
             nowaGra = new MojPrzycisk();
-            //pomoc = new Label();
+            pomoc = new Label();
 
 
             losuj = new Random();
@@ -194,6 +194,20 @@ namespace Kosci
                     gracz[i].Controls.Add(nazwaGracza[i]);
                 }
             }
+
+            pomoc.BackColor = Color.LightGray;
+            pomoc.BorderStyle = BorderStyle.FixedSingle;
+            pomoc.TextAlign = ContentAlignment.TopLeft;
+            pomoc.Font = new Font(pomoc.Font.FontFamily, 8);
+            pomoc.Text = "Kliknij dwa razy w żółty pasek aby dodać nazwy graczy, " +
+                "następnie kliknij 'Rozpocznij grę'";
+            pomoc.Text += Environment.NewLine;
+            pomoc.Text += "Każda tura składa się z maksymalnie trzech rzutów. " +
+                "Po każdym rzucie można przenieść kostkę do dolnego panelu klikając w nią. " +
+                "Rzucamy tylko kostkami w górnym panelu.";
+            pomoc.Location = new Point(281, gracz[3].Location.Y + gracz[3].Height + 3);
+            pomoc.Size = new Size(panelKW.Width, 84);
+
             inicjujGre();
             nrTury.Text = "";
             gra = false;
@@ -225,6 +239,7 @@ namespace Kosci
             this.Controls.Add(panelGra);
             this.Controls.Add(panelKW);
             this.Controls.Add(nowaGra);
+            this.Controls.Add(pomoc);
         }
 
         void nazwaGracza_MouseDoubleClick(object sender, MouseEventArgs e)
