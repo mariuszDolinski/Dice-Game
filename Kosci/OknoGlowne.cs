@@ -33,6 +33,8 @@ namespace Kosci
         private MojPrzycisk[] dodajGracza;
         private Label[] nazwaGracza;
         private Label pomoc; //etykieta z instrukcją gry
+        private Label about;
+        private MojPrzycisk showRules; //przycisk do wyswietlania zasad gry
 
         Random losuj;
 
@@ -54,6 +56,7 @@ namespace Kosci
         private int pierwszyGracz;
         private int ostatniGracz;
         private int[] dodaj; // 1 - dodaj gracza, 2 - usuń gracza, 0 - pozostałe
+        private bool rules; //flaga czy zasady są odkryte
 
         public OknoGlowne()
         {
@@ -67,8 +70,10 @@ namespace Kosci
             nrTury = new Label();
             rzut = new MojPrzycisk();
             nowaGra = new MojPrzycisk();
+            showRules = new MojPrzycisk();
             pomoc = new Label();
-
+            about = new Label();
+            rules = false;
 
             losuj = new Random();
             wynikRzutu = new int[5];
@@ -90,10 +95,15 @@ namespace Kosci
             nrTury.Size = new Size(7 * panelKL.Width / 10 - 3, 23);
             nrTury.TextAlign = ContentAlignment.MiddleCenter;
             nrTury.BackColor = Color.LemonChiffon;
-            
+
+            //domyslne rozmiary i umiejscownie przycisków
+            int buttonWidthBig = 80 * panelKW.Size.Width / 100;
+            int buttonWidthSmall = 3 * panelKL.Width / 10 - 1;
+            int buttonHeight = 24;
+            int buttonLocationY = 281 + (20 * panelKW.Size.Width / 100);
 
             rzut.Location = new Point(2 + nrTury.Width + 2, 2);
-            rzut.Size = new Size(3 * panelKL.Width / 10 - 1, 24);
+            rzut.Size = new Size(buttonWidthSmall, buttonHeight);
             rzut.Text = "Rzuć";
             rzut.BackColor = SystemColors.Control;
             rzut.MouseClick += new MouseEventHandler(rzut_MouseClick);
@@ -105,8 +115,8 @@ namespace Kosci
             panelKW.Size = new Size(239, 51);
             panelKW.BackColor = Color.Black;
 
-            nowaGra.Location = new Point(281 + (10 * panelKW.Size.Width / 100), panelKW.Location.Y + panelKW.Size.Height + 6);
-            nowaGra.Size = new Size(80 * panelKW.Size.Width / 100, rzut.Size.Height);
+            nowaGra.Location = new Point(buttonLocationY, panelKW.Location.Y + panelKW.Size.Height + 6);
+            nowaGra.Size = new Size(buttonWidthBig, buttonHeight);
             nowaGra.Text = "Rozpocznij grę";
             nowaGra.MouseClick += new MouseEventHandler(nowaGra_MouseClick);
 
@@ -195,18 +205,26 @@ namespace Kosci
                 }
             }
 
-            pomoc.BackColor = Color.LightGray;
+            about.BackColor = Color.LightGray;
+            about.BorderStyle = BorderStyle.FixedSingle;
+            about.TextAlign = ContentAlignment.TopCenter;
+            about.Font = new Font(pomoc.Font.FontFamily, 12);
+            about.Text = "Autor: Mariusz Doliński";
+            about.Text += Environment.NewLine;
+            about.Text += "Copyright © 2023";
+            about.Location = new Point(281, gracz[3].Location.Y + gracz[3].Height + 3);
+            about.Size = new Size(panelKW.Width, 45);
+
+            showRules.Location = new Point(buttonLocationY, about.Location.Y + about.Height + 10);
+            showRules.Size = new Size(buttonWidthBig, buttonHeight);
+            showRules.Text = "Pokaż zasady";
+            showRules.MouseClick += new MouseEventHandler(showRules_MouseClick);
+
+            pomoc.BackColor= Color.LightGray;
             pomoc.BorderStyle = BorderStyle.FixedSingle;
             pomoc.TextAlign = ContentAlignment.TopLeft;
-            pomoc.Font = new Font(pomoc.Font.FontFamily, 8);
-            pomoc.Text = "Kliknij dwa razy w żółty pasek aby dodać nazwy graczy, " +
-                "następnie kliknij 'Rozpocznij grę'";
-            pomoc.Text += Environment.NewLine;
-            pomoc.Text += "Każda tura składa się z maksymalnie trzech rzutów. " +
-                "Po każdym rzucie można przenieść kostkę do dolnego panelu klikając w nią. " +
-                "Rzucamy tylko kostkami w górnym panelu.";
-            pomoc.Location = new Point(281, gracz[3].Location.Y + gracz[3].Height + 3);
-            pomoc.Size = new Size(panelKW.Width, 84);
+            pomoc.Location = new Point(3, showRules.Location.Y + showRules.Height + 10);
+            pomoc.Size = new Size(this.Width - 22, 95);
 
             inicjujGre();
             nrTury.Text = "";
@@ -239,7 +257,8 @@ namespace Kosci
             this.Controls.Add(panelGra);
             this.Controls.Add(panelKW);
             this.Controls.Add(nowaGra);
-            this.Controls.Add(pomoc);
+            this.Controls.Add(about);
+            this.Controls.Add(showRules);
         }
 
         void nazwaGracza_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -297,6 +316,21 @@ namespace Kosci
                 }
 
             }
+        }
+
+        void showRules_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (rules)
+            {
+                this.Height -= 100;
+                this.Controls.Remove(pomoc);
+            }
+            else
+            {
+                this.Height += 100;
+                this.Controls.Add(pomoc);
+            }
+            if (rules) rules = false; else rules = true;
         }
 
         private int iloscGraczy()
