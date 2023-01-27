@@ -8,13 +8,14 @@ using System.Text;
 using System.Windows.Forms;
 
 
-// do poprawki - ostatnią ture moze grac tylko pierwszy gracz
+// do dodania - przed pierwszym rzutem powinno pokazywać ilość rzutów: 0
+//            - po zakończonej grze dodać informację o zwycieżcy lub niedkończonej grze
 
 namespace Kosci
 {
     public partial class OknoGlowne : Form
     {
-
+        #region definicja zmiennych i formatek
         private TablicaWynikow tab;
         private Panel panel;
         private Panel panelKL;
@@ -55,7 +56,9 @@ namespace Kosci
         private int ostatniGracz;
         private int[] dodaj; // 1 - dodaj gracza, 2 - usuń gracza, 0 - pozostałe
         private bool rules; //flaga czy zasady są odkryte
+        #endregion
 
+        #region konstruktor
         public OknoGlowne()
         {
             InitializeComponent();
@@ -221,10 +224,20 @@ namespace Kosci
             pomoc.BorderStyle = BorderStyle.FixedSingle;
             pomoc.TextAlign = ContentAlignment.TopLeft;
             pomoc.Location = new Point(3, showRules.Location.Y + showRules.Height + 10);
-            pomoc.Size = new Size(this.Width - 22, 95);
+            pomoc.Size = new Size(this.Width - 22, 150);
             pomoc.Text = "1. Przed rozpoczęciem gry dodaj conajmniej jednego gracza.";
             pomoc.Text += Environment.NewLine;
             pomoc.Text += "2. Aby dodać gracza kliknij dwa razy w żółty pasek, wpisz jego imię i kliknij Dodaj.";
+            pomoc.Text += Environment.NewLine;
+            pomoc.Text += "3. Po dodaniu gracza można go usunąć klikając Usuń. Gracza nie można usunąć w trakcie aktywnej gry.";
+            pomoc.Text += Environment.NewLine;
+            pomoc.Text += "4. Każda tura składa się z maksymalnie trzech rzutów. " +
+                "Po każdym rzucie można przenieść wybrane kostki na dolny panel klikając je. " +
+                "Rzucasz tylko kostkami z górnego panelu.";
+            pomoc.Text += Environment.NewLine;
+            pomoc.Text += "5. Gracz po każdym z rzutów może zebrać punkty za posiadany układ" +
+                " klikając odpowiednie pole w tabeli. Po najechaniu myszką na puste pole w tabeli w swojej kolumnie, " +
+                "gracz może podejrzeć ilość punktów jaką uzyska z dany układ.";
 
             inicjujGre();
             nrTury.Text = "";
@@ -261,7 +274,9 @@ namespace Kosci
             this.Controls.Add(about);
             this.Controls.Add(showRules);
         }
+        #endregion
 
+        #region obsługa zdarzeń myszki
         void nazwaGracza_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (!gra)
@@ -334,17 +349,143 @@ namespace Kosci
         {
             if (rules)
             {
-                this.Height -= 100;
+                this.Height -= 155;
                 this.Controls.Remove(pomoc);
             }
             else
             {
-                this.Height += 100;
+                this.Height += 155;
                 this.Controls.Add(pomoc);
             }
             if (rules) rules = false; else rules = true;
         }
 
+        void OknoGlowne_MouseLeave(object sender, EventArgs e)
+        {
+            if (gra && !kolejnaTura)
+            {
+                Label pole = new Label();
+                pole = (Label)sender;
+                int i, j;
+                i = ((PozycjaPola)pole.Tag).X;
+                j = ((PozycjaPola)pole.Tag).Y;
+
+                if (i == aktualnyGracz && !wybraneKategorie[i - 1, j])
+                    tab.Tablica[i, j].Text = "";
+            }
+        }
+        void OknoGlowne_MouseEnter(object sender, EventArgs e)
+        {
+            if (gra && !kolejnaTura)
+            {
+                Label pole = new Label();
+                pole = (Label)sender;
+                int i, j;
+                i = ((PozycjaPola)pole.Tag).X;
+                j = ((PozycjaPola)pole.Tag).Y;
+
+                if (i == aktualnyGracz && !wybraneKategorie[i - 1, j])
+                {
+                    obliczPunkty(i, j, 0);
+                }
+            }
+        }
+        void tablica_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (gra && !kolejnaTura)
+            {
+                if (sprawdzCzyPiatka() && tab.Tablica[aktualnyGracz, 14].Text != ""
+                    && tab.Tablica[aktualnyGracz, 14].Text != "0") piatki[aktualnyGracz - 1]++;
+                Label pole = new Label();
+                pole = (Label)sender;
+                int i, j;
+                i = ((PozycjaPola)pole.Tag).X;
+                j = ((PozycjaPola)pole.Tag).Y;
+
+
+                if (i == aktualnyGracz && !wybraneKategorie[i - 1, j]) // jeśli wskazana kolumna aktualnego gracza i niezajęta kategoria
+                {
+                    wybraneKategorie[i - 1, j] = true;
+                    obliczPunkty(i, j, 1);
+                    if (tura == 13 && i == ostatniGracz) zakonczGre(); //ostatni gracz i ostatnia tura = koniec gry
+                }
+                zmienAktualnegoGracza();
+                kolejnaTura = true;
+            }
+        }
+
+        void OknoGlowne_MouseClick(object sender, MouseEventArgs e)
+        {
+            Label kosc = new Label();
+            kosc = (Label)sender;
+            int i = (int)kosc.Tag;
+
+            if (!wybrane[i])
+            {
+                kosciWyb[i].Image = kosciLos[i].Image;
+                kosciLos[i].Image = Properties.Resources.pusty;
+                wybrane[i] = true;
+            }
+        }
+
+        void OknoGlowne02_MouseClick(object sender, MouseEventArgs e)
+        {
+            Label kosc = new Label();
+            kosc = (Label)sender;
+            int i = (int)kosc.Tag;
+
+            if (wybrane[i])
+            {
+                kosciLos[i].Image = kosciWyb[i].Image;
+                kosciWyb[i].Image = Properties.Resources.pusty;
+                wybrane[i] = false;
+            }
+        }
+
+        void rzut_MouseClick(object sender, MouseEventArgs e)
+        {
+            kolejnaTura = false;
+            if (gra && nrRzutu != 3)
+            {
+                if (tura < 14 || aktualnyGracz != pierwszyGracz)
+                {
+                    if (nrRzutu == 4)
+                    {
+                        nrRzutu = 1;
+                        //zmienAktualnegoGracza();
+                        if (aktualnyGracz == pierwszyGracz) tura++;
+                        for (int i = 0; i < 5; i++)
+                        {
+                            wybrane[i] = false;
+                            kosciWyb[i].Image = Properties.Resources.pusty;
+                        }
+                        if (tura != 14)
+                        {
+                            nrTury.Text = "Tura: " + tura.ToString() + "   Rzuty: " + nrRzutu.ToString();
+                            wykonajRzut();
+                            wyswietlRzut();
+                        }
+                        else
+                        {
+                            zakonczGre();
+                        }
+                    }
+                    else
+                    {
+                        nrRzutu++;
+                        nrTury.Text = "Tura: " + tura.ToString() + "   Rzuty: " + nrRzutu.ToString();
+                        wykonajRzut();
+                        wyswietlRzut();
+                    }
+                }
+                else
+                {
+                    zakonczGre();
+                }
+            }
+        }
+#endregion
+        
         private int iloscGraczy()
         {
             int wynik = 0;
@@ -484,6 +625,7 @@ namespace Kosci
         {
             gra = false;
             nrTury.Text = "Koniec gry !";
+            nowaGra.Text = "Rozpocznij grę";
             resetujKoloryGraczy();
             for (int i = 0; i < 5; i++)
             {
@@ -493,39 +635,7 @@ namespace Kosci
             }
         }
 
-        void OknoGlowne_MouseLeave(object sender, EventArgs e)
-        {
-            if (gra && !kolejnaTura)
-            {
-                Label pole = new Label();
-                pole = (Label)sender;
-                int i, j;
-                i = ((PozycjaPola)pole.Tag).X;
-                j = ((PozycjaPola)pole.Tag).Y;
-
-                if (i == aktualnyGracz && !wybraneKategorie[i - 1, j])
-                    tab.Tablica[i, j].Text = "";
-            }
-        }
-
-        void OknoGlowne_MouseEnter(object sender, EventArgs e)
-        {
-            if (gra && !kolejnaTura)
-            {
-                Label pole = new Label();
-                pole = (Label)sender;
-                int i, j;
-                i = ((PozycjaPola)pole.Tag).X;
-                j = ((PozycjaPola)pole.Tag).Y;
-
-                if (i == aktualnyGracz && !wybraneKategorie[i - 1, j])
-                {
-                    obliczPunkty(i, j, 0);
-                }
-            }
-        }
-
-        private void obliczPunkty(int i, int j, int p)
+        private void obliczPunkty(int i, int j, int p) //i,j wsp. pola do wpisania punktów, p=0 podgląd (nie wpisuje sumy), 1 - wpisanie sumy, wywołane po zatwierdzeniu kategorii
         {
             int punkty = 0;
             int b = 0;
@@ -616,19 +726,19 @@ namespace Kosci
             }
         }
 
-        private bool sprawdzCzyBonus1()
+        private bool sprawdzCzyBonus1()// +20pkt za uzyskanie minimum 60pkt w górnej części tablicy
         {
             if (suma1[aktualnyGracz - 1] >= 60) return true;
             return false;
         }
 
-        private void policzWynik()
+        private void policzWynik()// łaczny bieżący wynik
         {
             int i = aktualnyGracz - 1;
             wynik[i] = suma1[i] + suma2[i] + bonus1[i] + bonus2[i] + bonus3[i];
         }
 
-        private bool sprawdzCzyBonus2()
+        private bool sprawdzCzyBonus2() // +30pkt jeśli w dolnej części tabeli zdobędzie się punkty za każdy układ
         {
             if (tab.Tablica[1, 9].Text != "" && tab.Tablica[1, 9].Text != "0"
                 && tab.Tablica[1, 10].Text != "" && tab.Tablica[1, 10].Text != "0"
@@ -641,107 +751,11 @@ namespace Kosci
             return false;
         }
 
-        private bool sprawdzCzyBonus3()
+        private bool sprawdzCzyBonus3() // dodatkowe 40pkt za każdą dodatkowo wyrzuconą piątkę (poza pierwszą)
         {
             if (sprawdzCzyPiatka() && piatki[aktualnyGracz - 1] > 1) return true;
             return false;
         }
-
-        void tablica_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (gra && !kolejnaTura)
-            {
-                if (sprawdzCzyPiatka() && tab.Tablica[aktualnyGracz, 14].Text != "" 
-                    && tab.Tablica[aktualnyGracz, 14].Text != "0") piatki[aktualnyGracz - 1]++;
-                Label pole = new Label();
-                pole = (Label)sender;
-                int i, j;
-                i = ((PozycjaPola)pole.Tag).X;
-                j = ((PozycjaPola)pole.Tag).Y;
-
-
-                if (i == aktualnyGracz && !wybraneKategorie[i - 1, j])
-                {
-                    wybraneKategorie[i - 1, j] = true;
-                    obliczPunkty(i, j, 1);
-                    if (tura == 13) zakonczGre();
-                }
-                zmienAktualnegoGracza();
-                kolejnaTura = true;
-            }
-        }
-
-        void OknoGlowne_MouseClick(object sender, MouseEventArgs e)
-        {
-            Label kosc = new Label();
-            kosc = (Label)sender;
-            int i = (int)kosc.Tag;
-
-            if (!wybrane[i])
-            {
-                kosciWyb[i].Image = kosciLos[i].Image;
-                kosciLos[i].Image = Properties.Resources.pusty;
-                wybrane[i] = true;
-            }
-        }
-
-        void OknoGlowne02_MouseClick(object sender, MouseEventArgs e)
-        {
-            Label kosc = new Label();
-            kosc = (Label)sender;
-            int i = (int)kosc.Tag;
-
-            if (wybrane[i])
-            {
-                kosciLos[i].Image = kosciWyb[i].Image;
-                kosciWyb[i].Image = Properties.Resources.pusty;
-                wybrane[i] = false;
-            }
-        }
-
-        void rzut_MouseClick(object sender, MouseEventArgs e)
-        {
-            kolejnaTura = false;
-            if (gra && nrRzutu != 3)
-            {
-                if (tura < 14 || aktualnyGracz != pierwszyGracz)
-                {
-                    if (nrRzutu == 4)
-                    {
-                        nrRzutu = 1;
-                        //zmienAktualnegoGracza();
-                        if(aktualnyGracz == pierwszyGracz) tura++;
-                        for (int i = 0; i < 5; i++)
-                        {
-                            wybrane[i] = false;
-                            kosciWyb[i].Image = Properties.Resources.pusty;
-                        }
-                        if (tura != 14)
-                        {
-                            nrTury.Text = "Tura: " + tura.ToString() + "   Rzuty: " + nrRzutu.ToString();
-                            wykonajRzut();
-                            wyswietlRzut();
-                        }
-                        else
-                        {
-                            zakonczGre();
-                        }
-                    } 
-                    else
-                    {
-                        nrRzutu++;
-                        nrTury.Text = "Tura: " + tura.ToString() + "   Rzuty: " + nrRzutu.ToString();
-                        wykonajRzut();
-                        wyswietlRzut();
-                    }                                      
-                }
-                else
-                {
-                    zakonczGre();
-                }
-            }
-        }
-
         private void wykonajRzut()
         {
             for (int i = 0; i < 5; i++)
