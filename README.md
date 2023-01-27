@@ -13,8 +13,9 @@ Interface language: polish
 <ol>
 <li>Double click on yellow bar to add Player name</li>
 <li>Click "Rozpocznij grę'</li>
-<li>In each round each player has a maximum of three throws. 
+<li>In each turn each player has a maximum of three throws. 
 After each throw you can click on dice to take it to the bottom panel. 
 You throw only those dices which are in top panel.
-You can also take dice from bottom panel to the top one by just click it</li>
+You can also take dice from bottom panel to the top one by just click it.</li>
+  <li>After each throw player can choose </li>
 </ol>
