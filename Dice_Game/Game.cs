@@ -4,8 +4,6 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
-//po zmianie gracza rzuty na 0 i wyczyscic kostki
-// nr tury zmienic po kliknieciu punktów
 namespace Dice_Game
 {
     internal class Game : GameBoard
@@ -349,7 +347,6 @@ namespace Dice_Game
                     if (isYahtzee())
                     {
                         points = 50 + (5 * (3 - currentThrow));
-                        player[currentPlayer - 1].Yahtzees++;
                         scoreBoard.Board[i, j].Text = points.ToString();
                     }
                     else
@@ -366,6 +363,8 @@ namespace Dice_Game
             }
             if (p)
             {
+                if (isYahtzee()) 
+                    player[currentPlayer - 1].Yahtzees++;//increase yahtzees only after click
                 if (upper) 
                     player[i - 1].UpperSum += points; 
                 else
@@ -394,6 +393,7 @@ namespace Dice_Game
         {
             int pairs = 0;
             if (isYahtzee()) return true;
+            if (isFourOfAKind()) return true;
             for (int i = 0; i < 6; i++)
             {
                 if (numberCount[i] >= 2)
@@ -594,24 +594,8 @@ namespace Dice_Game
                 }
                 else
                 {
-                    if (currentThrow == 4)
-                    {
-                        currentThrow = 1;
-                        //changeCurrentPLayer();
-                        if (currentPlayer == firstPlayer)
-                            currentTurn++;
-                        for (int i = 0; i < 5; i++)
-                        {
-                            choosenDice[i] = false;
-                            diceChoosenLabel[i].Image = Properties.Resources.pusty;
-                        }
-                        throwHandle();
-                    }
-                    else
-                    {
-                        currentThrow++;
-                        throwHandle();
-                    }
+                    currentThrow++;
+                    throwHandle();
                 }
             }
         }
@@ -690,14 +674,31 @@ namespace Dice_Game
                     i = ((Cell)pole.Tag).X;
                     j = ((Cell)pole.Tag).Y;
 
+                    if (j == 0 || j == 7 || j == 8 || j == 16 || j == 17 || j == 18)
+                        return;
+
                     // if column of current player and not choosen category ten assign points
                     if (i == currentPlayer && !choosenCategories[i - 1, j]) 
                     {
                         choosenCategories[i - 1, j] = true;
                         updatePoints(i, j, true);
+
+                        //set next player turn
+                        currentThrow = 0;
+                        if (currentPlayer == lastPlayer)
+                            currentTurn++;
+                        for (int k = 0; k < 5; k++)
+                        {
+                            choosenDice[k] = false;
+                            diceChoosenLabel[k].Image = Properties.Resources.pusty;
+                            diceRolledLabel[k].Image = Properties.Resources.pusty;
+                        }
+                        turnNumber.Text = currentTurn.ToString();
+                        throwNumber.Text = currentThrow.ToString();
+                        //last turn and last player click = end game
                         if (currentTurn == 13 && i == lastPlayer)
                         {
-                            endCurrentGame(); //last turn and last player click = end game
+                            endCurrentGame(); 
                             return;
                         }      
                     }
