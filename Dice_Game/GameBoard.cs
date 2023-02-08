@@ -1,42 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace Dice_Game
+﻿namespace Dice_Game
 {
     internal class GameBoard
     {
-        public GameBoard(Main main) 
+        public GameBoard(Main main)
         {
             initComponents(main);
         }
 
         //components
         protected ScoreBoard scoreBoard = new ScoreBoard();
-        protected Panel scoresPanel= new Panel();//container for scoreBoard
+        protected Panel scoresPanel = new Panel();//container for scoreBoard
         protected Panel diceRolled = new Panel();//container for rolling dice
         protected Panel diceChoosen = new Panel();//container for choosen dice
         protected Panel game = new Panel();//container for game info
         protected Panel[] playerPanel = new Panel[4];
+        protected Panel buttonsPanel = new Panel();
         protected Label turnLabel = new Label();
         protected Label turnNumber = new Label();
         protected Label throwLabel = new Label();
         protected Label throwNumber = new Label();
         protected MyButton throwDiceButton = new MyButton();//button to throw dice
-        protected MyButton newGameButton = new MyButton();//button to start/end game
         protected Label[] diceRolledLabel = new Label[5];
         protected Label[] diceChoosenLabel = new Label[5];
         protected Label[] playerNumber = new Label[4];
         protected TextBox[] playerTextBox = new TextBox[4];
         protected MyButton[] addPlayerButton = new MyButton[4];
         protected Label[] playerName = new Label[4];
-        protected Label help = new Label(); //game instruction
-        protected Label about = new Label();
-        protected Button showRules = new Button();
-
+        protected MyButton newGameButton = new MyButton();//button to start/end game
+        protected MyButton bestScoresButton = new MyButton();
 
         private void initComponents(Main main)
         {
@@ -81,8 +72,8 @@ namespace Dice_Game
             int throwButtonWidth = 5 * diceRolled.Width / 20 + 2;
             int throwButtonHeight = 25;
             int throwDiceButtonLocationX = turnLabel.Width + turnNumber.Width + throwLabel.Width + throwNumber.Width + 7;
-            int newGameButtonX = 257 + (20 * diceChoosen.Size.Width / 100);
-            int newGameButtonWidth = 80 * diceChoosen.Size.Width / 100;
+            int newGameButtonX = diceChoosen.Location.X;//257 + (20 * diceChoosen.Size.Width / 100);
+            int newGameButtonWidth = diceChoosen.Size.Width - 2;
 
             throwDiceButton.Location = new Point(throwDiceButtonLocationX, 1);
             throwDiceButton.Size = new Size(throwButtonWidth, throwButtonHeight);
@@ -94,10 +85,6 @@ namespace Dice_Game
             game.Controls.Add(throwLabel);
             game.Controls.Add(throwNumber);
             game.Controls.Add(throwDiceButton);
-
-            newGameButton.Location = new Point(newGameButtonX, diceChoosen.Location.Y + diceChoosen.Size.Height + 6);
-            newGameButton.Size = new Size(newGameButtonWidth, throwButtonHeight);
-            newGameButton.Text = "Rozpocznij grę";
 
             for (int i = 0; i < ScoreBoard.BoardWidth; i++)
             {
@@ -121,7 +108,7 @@ namespace Dice_Game
                     addPlayerButton[i] = new MyButton();
                     playerName[i] = new Label();
 
-                    playerPanel[i].Location = new Point(281, newGameButton.Location.Y + newGameButton.Height + 6 + (33 * i));
+                    playerPanel[i].Location = new Point(281, diceChoosen.Location.Y + diceChoosen.Size.Height + 3 + (30 * i));
                     playerPanel[i].Size = new Size(diceChoosen.Width, 27);
                     playerPanel[i].BackColor = Color.Black;
 
@@ -164,12 +151,27 @@ namespace Dice_Game
                 }
             }
 
+            //panel with buttons
+            buttonsPanel.Location = new Point(newGameButtonX, playerPanel[3].Location.Y + playerPanel[3].Size.Height + 2);
+            buttonsPanel.Size = new Size(239, 52);
+            buttonsPanel.BackColor = Color.Black;
+            newGameButton.Location = new Point(1, 1);
+            newGameButton.Size = new Size(newGameButtonWidth, 25);
+            newGameButton.Text = "Rozpocznij grę";
+            newGameButton.BackColor = SystemColors.Control;
+            bestScoresButton.Location = new Point(1, 26);
+            bestScoresButton.Size = new Size(newGameButtonWidth, 25);
+            bestScoresButton.Text = "Najlepsze wyniki";
+            bestScoresButton.BackColor = SystemColors.Control;
+            buttonsPanel.Controls.Add(newGameButton);
+            buttonsPanel.Controls.Add(bestScoresButton);
+
             for (int i = 0; i < ScoreBoard.BoardWidth; i++)
             {
                 for (int j = 0; j < ScoreBoard.BoardHeight; j++)
                 {
                     scoreBoard.Board[i, j].Tag = new Cell() { X = i, Y = j };
-                    if(i != 0 && j != 0) scoreBoard.Board[i, j].Text = "";
+                    if (i != 0 && j != 0) scoreBoard.Board[i, j].Text = "";
                     if (j == 7 || j == 8 || j == 16 || j == 17 || j == 18)
                     {
                         if (i != 0)
@@ -191,9 +193,7 @@ namespace Dice_Game
             main.Controls.Add(diceRolled);
             main.Controls.Add(game);
             main.Controls.Add(diceChoosen);
-            main.Controls.Add(newGameButton);
-            main.Controls.Add(about);
-            main.Controls.Add(showRules);
+            main.Controls.Add(buttonsPanel);
         }
 
         /// <summary>

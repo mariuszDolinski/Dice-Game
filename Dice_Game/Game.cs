@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+﻿using Newtonsoft.Json;
 
 namespace Dice_Game
 {
@@ -22,8 +18,9 @@ namespace Dice_Game
         }
 
         #region definition of variables
-        
+
         Random? generate;
+        BestScores highScores = new BestScores();
 
         private int[] throwResult; //throw result on each dice
         private int[] numberCount; //count how many of each number was rolled
@@ -34,13 +31,14 @@ namespace Dice_Game
         private bool isGameOn; //true ig game is started, otherwise false
         private int currentTurn;
         private int currentThrow;
-        //ustawić possiblepoints na odwrót true <-> false
         private bool showPossiblePoints; //indicate if points should be shown in table for current player
         private int currentPlayer; //index of active player
         private int firstPlayer; //index of first player in game
         private int lastPlayer; //index of last player in game
         private int[] addPlayerMode; //use to determine state of addPlayer button
         //private bool rules; // if true rules panel is shown
+
+        private const string pathBestScores = @"bs\bestscores.json";
         #endregion
 
         private void initGame()
@@ -53,6 +51,8 @@ namespace Dice_Game
             initNewGame();
             turnNumber.Text = "0"; //set to 0 after launching program
             isGameOn = false; //set to false because initNewGame set this true
+
+            initBestScoresFile();
         }
 
         private void initNewGame()
@@ -106,7 +106,11 @@ namespace Dice_Game
             }
         }
 
-        private void endCurrentGame()
+        /// <summary>
+        /// Ends current game
+        /// </summary>
+        /// <param name="mode">if true player result is adding to best scores</param>
+        private void endCurrentGame(bool mode)
         {
             isGameOn = false;
             newGameButton.Text = "Rozpocznij grę";
@@ -116,6 +120,24 @@ namespace Dice_Game
                 choosenDice[i] = false;
                 diceChoosenLabel[i].Image = Properties.Resources.pusty;
                 diceRolledLabel[i].Image = Properties.Resources.pusty;
+            }
+            if(mode)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    Player tPlayer = new Player();
+                    if (player[i].Active)
+                    {
+                        tPlayer.Name = player[i].Name;
+                        tPlayer.Score = player[i].Score;
+                        tPlayer.Date = DateTime.Now;
+                        if (highScores.addBestScore(tPlayer))
+                        {
+                            string hsSerialized = JsonConvert.SerializeObject(highScores, Formatting.Indented);
+                            File.WriteAllText(pathBestScores, hsSerialized);
+                        }
+                    }
+                }
             }
         }
 
@@ -131,7 +153,7 @@ namespace Dice_Game
             }
             return 0;
         }
-        
+
         /// <summary>
         /// Return number of last player in game  or 0 if no player was found
         /// </summary>
@@ -171,7 +193,7 @@ namespace Dice_Game
         }
         private void makeThrow()
         {
-            if(generate != null)
+            if (generate != null)
             {
                 for (int i = 0; i < 5; i++)
                 {
@@ -247,33 +269,33 @@ namespace Dice_Game
             bool upper = false;
             switch (j)//switch category
             {
-                case 1: 
+                case 1:
                     scoreBoard.Board[i, j].Text = numberCount[0].ToString();
                     points = numberCount[0];
                     upper = true;
                     break;
-                case 2: 
+                case 2:
                     scoreBoard.Board[i, j].Text = (numberCount[1] * 2).ToString();
                     points = 2 * numberCount[1];
                     upper = true;
                     break;
-                case 3: 
+                case 3:
                     scoreBoard.Board[i, j].Text = (numberCount[2] * 3).ToString();
                     points = 3 * numberCount[2];
                     upper = true;
                     break;
-                case 4: 
-                    scoreBoard.Board[i, j].Text = (numberCount[3] * 4).ToString(); 
+                case 4:
+                    scoreBoard.Board[i, j].Text = (numberCount[3] * 4).ToString();
                     points = 4 * numberCount[3];
                     upper = true;
                     break;
-                case 5: 
-                    scoreBoard.Board[i, j].Text = (numberCount[4] * 5).ToString(); 
+                case 5:
+                    scoreBoard.Board[i, j].Text = (numberCount[4] * 5).ToString();
                     points = 5 * numberCount[4];
                     upper = true;
                     break;
-                case 6: 
-                    scoreBoard.Board[i, j].Text = (numberCount[5] * 6).ToString(); 
+                case 6:
+                    scoreBoard.Board[i, j].Text = (numberCount[5] * 6).ToString();
                     points = 6 * numberCount[5];
                     upper = true;
                     break;
@@ -315,7 +337,7 @@ namespace Dice_Game
                         points = 0;
                         scoreBoard.Board[i, j].Text = "0";
                     }
-                    break;              
+                    break;
                 case 12:
                     upper = false;
                     if (isStraight())
@@ -358,15 +380,15 @@ namespace Dice_Game
                 case 15:
                     points = chance();
                     upper = false;
-                    scoreBoard.Board[i, j].Text = chance().ToString(); 
+                    scoreBoard.Board[i, j].Text = chance().ToString();
                     break;
             }
             if (p)
             {
-                if (isYahtzee()) 
+                if (isYahtzee())
                     player[currentPlayer - 1].Yahtzees++;//increase yahtzees only after click
-                if (upper) 
-                    player[i - 1].UpperSum += points; 
+                if (upper)
+                    player[i - 1].UpperSum += points;
                 else
                     player[i - 1].LowerSum += points;
 
@@ -374,7 +396,7 @@ namespace Dice_Game
                     player[i - 1].UpperBonus = 20;
                 if (isLowerBonus() && player[i - 1].LowerBonus == 0)
                     player[i - 1].LowerBonus = 30;
-                if (isYahtzeeBonus()) 
+                if (isYahtzeeBonus())
                     player[i - 1].YahtzeeBonus += 40;
 
                 calculateOverallScore();
@@ -384,7 +406,7 @@ namespace Dice_Game
                 scoreBoard.Board[i, 16].Text = player[i - 1].LowerSum.ToString();
                 scoreBoard.Board[i, 17].Text = (player[i - 1].LowerBonus + player[i - 1].YahtzeeBonus).ToString();
                 scoreBoard.Board[i, 18].Text = player[i - 1].Score.ToString();
-                currentThrow= 4;
+                currentThrow = 4;
             }
         }
 
@@ -477,7 +499,7 @@ namespace Dice_Game
         }
         private bool isYahtzeeBonus() // +40 points for any extra Yahtzee except first
         {
-            if (isYahtzee() && player[currentPlayer - 1].Yahtzees > 1 
+            if (isYahtzee() && player[currentPlayer - 1].Yahtzees > 1
                 && scoreBoard.Board[currentPlayer, 14].Text != "0") return true;
             return false;
         }
@@ -488,10 +510,26 @@ namespace Dice_Game
         }
         #endregion
 
+        private void initBestScoresFile()
+        {
+            if (File.Exists(pathBestScores))
+            {
+                string hsDeserialized = File.ReadAllText(pathBestScores);
+                highScores = JsonConvert.DeserializeObject<BestScores>(hsDeserialized);
+            }
+            else
+            {
+                highScores.createDefaultList();
+                string hsSerialized = JsonConvert.SerializeObject(highScores, Formatting.Indented);
+                File.WriteAllText(pathBestScores, hsSerialized);
+            }
+        }
+
         public void MouseEventsInitalize()
         {
             newGameButton.MouseClick += new MouseEventHandler(newGameButton_MouseClick);
             throwDiceButton.MouseClick += new MouseEventHandler(throwDiceButton_MouseClick);
+            bestScoresButton.MouseClick += new MouseEventHandler(bestScoresButton_MouseClick);
             for (int i = 0; i < 5; i++)
             {
                 diceRolledLabel[i].MouseClick += new MouseEventHandler(diceRolledLabel_MouseClick);
@@ -504,7 +542,8 @@ namespace Dice_Game
             }
             for (int i = 1; i < ScoreBoard.BoardWidth; i++)
             {
-                for (int j = 1; j < ScoreBoard.BoardHeight; j++){
+                for (int j = 1; j < ScoreBoard.BoardHeight; j++)
+                {
                     scoreBoard.Board[i, j].MouseEnter += new EventHandler(scoreBoard_MouseEnter);
                     scoreBoard.Board[i, j].MouseLeave += new EventHandler(scoreBoard_MouseLeave);
                     scoreBoard.Board[i, j].MouseClick += new MouseEventHandler(scoreBoard_MouseClick);
@@ -528,7 +567,7 @@ namespace Dice_Game
         }
         private void addPlayerButton_MouseClick(object? sender, MouseEventArgs e)
         {
-            if(sender != null)
+            if (sender != null)
             {
                 MyButton button = (MyButton)sender;
                 int i = (int)button.Tag;
@@ -564,7 +603,7 @@ namespace Dice_Game
                 {
                     isGameOn = false;
                     newGameButton.Text = "Rozpocznij grę";
-                    endCurrentGame(); 
+                    endCurrentGame(false);
                 }
                 else
                 {
@@ -579,7 +618,7 @@ namespace Dice_Game
                 string message = "Nie dodano żanych graczy.";
                 message += Environment.NewLine;
                 message += "Dodaj gracza kilkając dwa razy w pole obok przycisku 'Dodaj'";
-                MessageBox.Show(message,"UWAGA", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(message, "UWAGA", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
         private void throwDiceButton_MouseClick(object? sender, MouseEventArgs e)
@@ -587,10 +626,10 @@ namespace Dice_Game
             showPossiblePoints = true;
             if (isGameOn)
             {
-                if(currentThrow == 3)
+                if (currentThrow == 3)
                 {
                     MessageBox.Show($"Gracz {player[currentPlayer - 1].Name} musi przypisać punkty do wybranej kategorii.",
-                        "Uwaga",MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                        "Uwaga", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 else
                 {
@@ -601,7 +640,7 @@ namespace Dice_Game
         }
         private void diceRolledLabel_MouseClick(object? sender, MouseEventArgs e)
         {
-            if(sender != null)
+            if (sender != null)
             {
                 Label dice = (Label)sender;
                 int i = (int)dice.Tag;
@@ -616,7 +655,7 @@ namespace Dice_Game
         }
         private void diceChoosenLabel_MouseClick(object? sender, MouseEventArgs e)
         {
-            if(sender !=null)
+            if (sender != null)
             {
                 Label dice = (Label)sender;
                 int i = (int)dice.Tag;
@@ -674,11 +713,13 @@ namespace Dice_Game
                     i = ((Cell)pole.Tag).X;
                     j = ((Cell)pole.Tag).Y;
 
+                    if (i != currentPlayer)
+                        return;
                     if (j == 0 || j == 7 || j == 8 || j == 16 || j == 17 || j == 18)
                         return;
 
                     // if column of current player and not choosen category ten assign points
-                    if (i == currentPlayer && !choosenCategories[i - 1, j]) 
+                    if (i == currentPlayer && !choosenCategories[i - 1, j])
                     {
                         choosenCategories[i - 1, j] = true;
                         updatePoints(i, j, true);
@@ -696,16 +737,22 @@ namespace Dice_Game
                         turnNumber.Text = currentTurn.ToString();
                         throwNumber.Text = currentThrow.ToString();
                         //last turn and last player click = end game
-                        if (currentTurn == 13 && i == lastPlayer)
+                        if (currentTurn == 14)
                         {
-                            endCurrentGame(); 
+                            endCurrentGame(true);
                             return;
-                        }      
+                        }
                     }
                     changeCurrentPLayer();
                     showPossiblePoints = false; //if category is choosen don't show possible points in other categories
                 }
             }
+        }
+        private void bestScoresButton_MouseClick(object? sender, MouseEventArgs e)
+        {
+            BestScoresWindow bs = new BestScoresWindow();
+            bs.Show();
+            bs.DisplayBestResults(highScores.BestScoresList);
         }
         #endregion
     }

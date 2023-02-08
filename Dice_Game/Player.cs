@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Dice_Game
+﻿namespace Dice_Game
 {
-    internal class Player
+    public class Player
     {
-        public Player() 
+        public Player()
         {
-            Name= string.Empty;
+            Name = "Anonim";
             Score = 0;
-        } 
+            Date = DateTime.Now;
+        }
         public string Name { get; set; }
         public int Score { get; set; }
+        public DateTime Date { get; set; } = new DateTime();
 
     }
 }

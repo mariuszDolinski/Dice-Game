@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Dice_Game
+﻿namespace Dice_Game
 {
     internal class DicePlayer : Player
     {
-        public DicePlayer() 
+        public DicePlayer()
         {
             resetPlayer();
         }
         public int UpperSum { get; set; }
-        public int LowerSum { get; set;}
+        public int LowerSum { get; set; }
         public int UpperBonus { get; set; }
         public int LowerBonus { get; set; }
         public int YahtzeeBonus { get; set; }
@@ -29,7 +23,7 @@ namespace Dice_Game
             UpperSum = 0;
             LowerSum = 0;
             Yahtzees = 0;
-            Score= 0;
+            Score = 0;
         }
     }
 }
