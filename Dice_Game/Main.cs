@@ -9,6 +9,8 @@ namespace Dice_Game
 
             game = new Game(this);
             game.MouseEventsInitalize();
+            this.MaximumSize = new Size(this.Width, this.Height);
+            this.MinimumSize = new Size(this.Width, this.Height);
         }
 
 

@@ -109,7 +109,7 @@ namespace Dice_Game
         /// <summary>
         /// Ends current game
         /// </summary>
-        /// <param name="mode">if true player result is adding to best scores</param>
+        /// <param name="mode">if true all turns was played</param>
         private void endCurrentGame(bool mode)
         {
             isGameOn = false;
@@ -135,8 +135,25 @@ namespace Dice_Game
                         {
                             string hsSerialized = JsonConvert.SerializeObject(highScores, Formatting.Indented);
                             File.WriteAllText(pathBestScores, hsSerialized);
+                            MessageBox.Show($"Gracz {player[i].Name} uzyskał jeden z najlepszych wyników" +
+                                Environment.NewLine + "Wejdź w Najlepsze wyniki aby sprawdzić pozycję.",
+                                "Gratulacje!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
+                }
+
+                if (numberOfPlayers() > 1)
+                {
+                    int winnerIndex = findFirstPlayer() - 1;
+                    for(int i=winnerIndex; i < 4; i++)
+                    {
+                        if (player[i].Active && player[i].Score > player[winnerIndex].Score) 
+                        {
+                            winnerIndex = i;
+                        }
+                    }
+                    MessageBox.Show($"Gracz {player[winnerIndex].Name} wygrał. Gratulacje!",
+                        "Koniec gry", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
         }
