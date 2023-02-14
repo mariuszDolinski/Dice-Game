@@ -1,21 +1,16 @@
 # Dice-Game
-Its a desktop app which allows to play Dice Game. Max number of players: 4 (on the same computer).
+Its a desktop app which allows to play Dice Game (base on Yahtzee rules). Max number of players: 4 (on the same computer).
 Interface language: polish
 
-<h1>Technology used</h1>
+<h3>Technology used</h3>
 <ul>
-<li>Microsoft Visual Studio (ver. 10 to 2022)</li>
+<li>Microsoft Visual Studio 2022</li>
+<li>.Net 6.0</li>
 <li>Windows Forms</li>
 <li>C#</li>
 </ul>
 
 <h1>Rules</h1>
-<ol>
-<li>Double click on yellow bar to add Player name</li>
-<li>Click "Rozpocznij grę'</li>
-<li>In each turn each player has a maximum of three throws. 
-After each throw you can click on dice to take it to the bottom panel. 
-You throw only those dices which are in top panel.
-You can also take dice from bottom panel to the top one by just click it.</li>
-  <li>After each throw player can choose </li>
-</ol>
+Rules are some modificatin of classic Yahtzee game. 
+To start game add at leats one player double clicking on yellow label next to its number and type name.
+Best 10 scores are saved in json file. If there is no json file, new default file is created.
