@@ -29,20 +29,22 @@
         protected MyButton newGameButton = new MyButton();//button to start/end game
         protected MyButton bestScoresButton = new MyButton();
 
+        
+
         private void initComponents(Main main)
         {
             //set properties for main panels
             scoresPanel.Location = new Point(2, 2);
-            scoresPanel.Size = new Size(274, 385);
+            scoresPanel.Size = new Size(Scales.ScoresPanelSizeX, Scales.ScoresPanelSizeY);
             scoresPanel.BackColor = Color.Black;
-            diceRolled.Location = new Point(281, 2);
-            diceRolled.Size = new Size(239, 51);
+            diceRolled.Location = new Point(Scales.GameLocationX, 2);
+            diceRolled.Size = new Size(Scales.DicedPanelSizeX, Scales.DicedPanelSizeY);
             diceRolled.BackColor = Color.Black;
-            game.Location = new Point(281, 56);
-            game.Size = new Size(diceRolled.Width, 27);
+            game.Location = new Point(Scales.GameLocationX, Scales.GameLocationY);
+            game.Size = new Size(Scales.GameSizeX, Scales.GameSizeY);
             game.BackColor = Color.Black;
-            diceChoosen.Location = new Point(281, game.Location.Y + game.Size.Height + 3);
-            diceChoosen.Size = new Size(239, 51);
+            diceChoosen.Location = new Point(Scales.GameLocationX, Scales.DicedChoosenPanelLocationY);
+            diceChoosen.Size = new Size(Scales.DicedPanelSizeX, Scales.DicedPanelSizeY);
             diceChoosen.BackColor = Color.Black;
 
             turnLabel.Location = new Point(2, 2);
@@ -96,7 +98,7 @@
                 diceChoosenLabel[i].Tag = i;
                 diceChoosenLabel[i].Location = new Point(2 + 47 * i, 2);
                 diceChoosenLabel[i].Size = new Size(47, 47);
-                diceRolledLabel[i].Image = Properties.Resources.pusty;
+                diceRolledLabel[i].Image = Properties.Resources.kosci05nowy;
                 diceChoosenLabel[i].Image = Properties.Resources.pusty;
                 diceRolled.Controls.Add(diceRolledLabel[i]);
                 diceChoosen.Controls.Add(diceChoosenLabel[i]);
@@ -180,12 +182,6 @@
                         }
                     }
                     scoresPanel.Controls.Add(scoreBoard.Board[i, j]);
-                    if (i > 0)
-                    {
-                        //tab.Tablica[i, j].MouseEnter += new EventHandler(OknoGlowne_MouseEnter);
-                        //tab.Tablica[i, j].MouseLeave += new EventHandler(OknoGlowne_MouseLeave);
-                        //tab.Tablica[i,j].MouseClick +=new MouseEventHandler(tablica_MouseClick);
-                    }
                 }
             }
 

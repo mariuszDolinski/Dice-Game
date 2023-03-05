@@ -20,14 +20,16 @@
                     Board[i, j].Font = new Font(FontFamily.GenericSansSerif, 10, FontStyle.Bold);
                     if (i == 0)
                     {
-                        Board[i, j].Location = new Point(3 + i * 135, 3 + j * 20);
-                        Board[i, j].Size = new Size(124, 19);
+                        Board[i, j].Location = new Point((int)Math.Round(Scales.Scale*(3 + i * 135)), (int)Math.Round(Scales.Scale * (3 + j * 20)));
+                        Board[i, j].Size = 
+                            new Size((int)Math.Round(Scales.Scale * 124), (int)Math.Round(Scales.Scale * 19));
                         Board[i, j].TextAlign = ContentAlignment.MiddleLeft;
                     }
                     else
                     {
-                        Board[i, j].Location = new Point(92 + i * 36, 3 + j * 20);
-                        Board[i, j].Size = new Size(35, 19);
+                        Board[i, j].Location = new Point((int)Math.Round(Scales.Scale*(92 + i * 36)), (int)Math.Round(Scales.Scale *(3 + j * 20)));
+                        Board[i, j].Size
+                            = new Size((int)Math.Round(Scales.Scale * 35), (int)Math.Round(Scales.Scale * 19));
                         Board[i, j].TextAlign = ContentAlignment.MiddleCenter;
                     }
                 }
