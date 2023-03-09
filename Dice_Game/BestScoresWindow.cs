@@ -7,10 +7,10 @@
             InitializeComponent();
             init();
 
-            cellWidth[0] = this.Width/10 - 18; 
-            cellWidth[1] = 9 * this.Width/20 - 2; 
-            cellWidth[2] = 3 * this.Width/20 - 2; 
-            cellWidth[3] = 3 * this.Width/10 - 8;
+            cellWidth[0] = Scales.FirstColBS;
+            cellWidth[1] = Scales.SecondColBS;
+            cellWidth[2] = Scales.ThirdColBS;
+            cellWidth[3] = Scales.FourthColBS;
             bestScoresTable = new Label[tableWidth, tableHeight];
             int k = 2; //second vertical border is 
             for (int i = 0; i < tableWidth; i++)
@@ -21,12 +21,12 @@
                     bestScoresTable[i, j] = new Label();
                     bestScoresTable[i, j].Size = new Size(cellWidth[i], cellHeight);
                     bestScoresTable[i, j].Location = 
-                        new Point(currentCellPositionX(i) + 2 + 2*i, j * (cellHeight + 1) + k);
+                        new Point(currentCellPositionX(i) + (int)Math.Round(Scales.Scale * (4 + 2*i)), j * (cellHeight + 1) + k);
                     bestScoresTable[i, j].BackColor = Color.White;
                     if (j == 0)
                         bestScoresTable[i, j].BackColor = Color.Gray;
                     else
-                        bestScoresTable[i, j].BackColor = Color.Azure;
+                        bestScoresTable[i, j].BackColor = Color.LightSteelBlue;
                     if(j == 0 || i == 2)
                     {
                         bestScoresTable[i, j].Font = new Font(FontFamily.GenericSansSerif, 10, FontStyle.Bold);
@@ -52,21 +52,21 @@
         private Label[,] bestScoresTable;
         private const int tableWidth = 4;
         private const int tableHeight = 11;
-        int cellHeight = 19;
+        int cellHeight = Scales.CellHeightBS;
         int[] cellWidth = new int[tableWidth];
 
         private void init()
         {
-            this.Height = 267;
-            this.Width = 500;
-            this.MaximumSize = new Size(this.Width, this.Height);
-            this.MinimumSize = new Size(this.Width, this.Height);
-            this.Text = "Najlepsze wyniki";
+            Height = Scales.WindowHeightBS;
+            Width = Scales.WindowWidthBS;
+            MaximumSize = new Size(Width, Height);
+            MinimumSize = new Size(Width, Height);
+            Text = "Najlepsze wyniki";
 
             bestScoresPanel.Location = new Point(2, 2);
-            bestScoresPanel.Size = new Size(this.Width - 20, this.Height - 43);
-            bestScoresPanel.BackColor = Color.Black;
-            this.Controls.Add(bestScoresPanel);
+            bestScoresPanel.Size = new Size(Scales.PanelWidthBS, Scales.PanelHeightBS);
+            bestScoresPanel.BackColor = SystemColors.Window;
+            Controls.Add(bestScoresPanel);
         }
 
         //initialize table content

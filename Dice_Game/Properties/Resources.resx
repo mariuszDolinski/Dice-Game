@@ -121,20 +121,38 @@
   <data name="dice01" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\dice01.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="dice01y" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\dice01y.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="dice02" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\dice02.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="dice02y" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\dice02y.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="dice03" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\dice03.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="dice03y" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\dice03y.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="dice04" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\dice04.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="dice04y" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\dice04y.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="dice05" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\dice05.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="dice05y" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\dice05y.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="dice06" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\dice06.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="dice06y" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\dice06y.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="diceEmpty" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\diceEmpty.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

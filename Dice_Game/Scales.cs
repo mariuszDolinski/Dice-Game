@@ -33,6 +33,17 @@ namespace Dice_Game
         public static readonly int ButtonsPanelHeight;
         public static readonly int ButtonsHeight;
 
+        //bestscore
+        public static readonly int WindowWidthBS;
+        public static readonly int WindowHeightBS;
+        public static readonly int PanelWidthBS;
+        public static readonly int PanelHeightBS;
+        public static readonly int FirstColBS;
+        public static readonly int SecondColBS;
+        public static readonly int ThirdColBS;
+        public static readonly int FourthColBS;
+        public static readonly int CellHeightBS;
+
         static Scales() 
         {
             if (Scale == 1.0F)
@@ -88,6 +99,28 @@ namespace Dice_Game
             ButtonsPanelLocationY = PlayerPanelLocationY[3] + PlayerPanelHeight + 3;
             ButtonsPanelHeight = (int)Math.Round(Scale * 52);
             ButtonsHeight = (int)Math.Round(Scale * 25);
+
+            //bestscores
+            if(Scale == 1.0F)
+            {
+                WindowWidthBS = (int)Math.Round(Scale * 500);
+                WindowHeightBS = (int)Math.Round(Scale * 267);
+                PanelWidthBS = (int)Math.Round(Scale * 475);
+                PanelHeightBS = (int)Math.Round(Scale * 224);
+            }
+            else
+            {
+                WindowWidthBS = (int)Math.Round(Scale * 490);
+                WindowHeightBS = (int)Math.Round(Scale * 259);
+                PanelWidthBS = (int)Math.Round(Scale * 475);
+                PanelHeightBS = (int)Math.Round(Scale * 224);
+            }
+
+            FirstColBS = WindowWidthBS / 10 - (int)Math.Round(Scale * 18);
+            SecondColBS = 9 * WindowWidthBS / 20 - (int)Math.Round(Scale * 2);
+            ThirdColBS = 3 * WindowWidthBS / 20 - (int)Math.Round(Scale * 2);
+            FourthColBS = 3 * WindowWidthBS / 10 - (int)Math.Round(Scale * 8);
+            CellHeightBS = (int)Math.Round(Scale * 19);
         }
         /// <summary>
         /// set dice image depends on scale
@@ -99,13 +132,13 @@ namespace Dice_Game
             {
                 switch (i)
                 {
-                    case 1: return Resources.dice01;
-                    case 2: return Resources.dice02;
-                    case 3: return Resources.dice03;
-                    case 4: return Resources.dice04;
-                    case 5: return Resources.dice05;
-                    case 6: return Resources.dice06;
-                    default: return Resources.diceEmpty;
+                    case 1: return Resources.dice01y;
+                    case 2: return Resources.dice02y;
+                    case 3: return Resources.dice03y;
+                    case 4: return Resources.dice04y;
+                    case 5: return Resources.dice05y;
+                    case 6: return Resources.dice06y;
+                    default: return Resources.empty;
                 }
             }
             else
@@ -118,7 +151,7 @@ namespace Dice_Game
                     case 4: return Resources.kosci04;
                     case 5: return Resources.kosci05;
                     case 6: return Resources.kosci06;
-                    default: return Resources.empty;
+                    default: return Resources.pusty;
                 }
             }
         }
