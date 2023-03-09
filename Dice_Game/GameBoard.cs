@@ -29,56 +29,49 @@
         protected MyButton newGameButton = new MyButton();//button to start/end game
         protected MyButton bestScoresButton = new MyButton();
 
-        
-
         private void initComponents(Main main)
         {
             //set properties for main panels
             scoresPanel.Location = new Point(2, 2);
-            scoresPanel.Size = new Size(Scales.ScoresPanelSizeX, Scales.ScoresPanelSizeY);
+            scoresPanel.Size = new Size(Scales.ScoresPanelWidth, Scales.ScoresPanelHeight);
             scoresPanel.BackColor = Color.Black;
-            diceRolled.Location = new Point(Scales.GameLocationX, 2);
-            diceRolled.Size = new Size(Scales.DicedPanelSizeX, Scales.DicedPanelSizeY);
+            diceRolled.Location = new Point(Scales.RightPanelsLocationX, 2);
+            diceRolled.Size = new Size(Scales.RightPanelsWidth, Scales.DicedPanelHeight);
             diceRolled.BackColor = Color.Black;
-            game.Location = new Point(Scales.GameLocationX, Scales.GameLocationY);
-            game.Size = new Size(Scales.GameSizeX, Scales.GameSizeY);
+            game.Location = new Point(Scales.RightPanelsLocationX, Scales.GameLocationY);
+            game.Size = new Size(Scales.RightPanelsWidth, Scales.GamePanelHeight);
             game.BackColor = Color.Black;
-            diceChoosen.Location = new Point(Scales.GameLocationX, Scales.DicedChoosenPanelLocationY);
-            diceChoosen.Size = new Size(Scales.DicedPanelSizeX, Scales.DicedPanelSizeY);
+            diceChoosen.Location = new Point(Scales.RightPanelsLocationX, Scales.DicedChoosenPanelLocationY);
+            diceChoosen.Size = new Size(Scales.RightPanelsWidth, Scales.DicedPanelHeight);
             diceChoosen.BackColor = Color.Black;
 
             turnLabel.Location = new Point(2, 2);
-            turnLabel.Size = new Size(5 * diceRolled.Width / 20, 23);
+            turnLabel.Size = new Size(Scales.GameLabelWidth, Scales.GameInnerHeight);
+            turnLabel.Font = new Font(FontFamily.GenericSansSerif, 10);
             turnLabel.TextAlign = ContentAlignment.MiddleCenter;
             turnLabel.BackColor = Color.LemonChiffon;
             turnLabel.Text = "Tura";
-            turnNumber.Location = new Point(turnLabel.Width + 3, 2);
-            turnNumber.Size = new Size(diceRolled.Width / 10 + 3, 23);
+            turnNumber.Location = new Point(Scales.TurnNumberLocationX, 2);
+            turnNumber.Size = new Size(Scales.GameNumberWidth, Scales.GameInnerHeight);
             turnNumber.TextAlign = ContentAlignment.MiddleCenter;
             turnNumber.BackColor = Color.LemonChiffon;
             turnNumber.Font = new Font(FontFamily.GenericSansSerif, 10, FontStyle.Bold);
             turnNumber.Text = "0";
-            throwLabel.Location = new Point(turnLabel.Width + turnNumber.Width + 5, 2);
-            throwLabel.Size = new Size(5 * diceRolled.Width / 20, 23);
+            throwLabel.Location = new Point(Scales.ThrowLabelLocationX, 2);
+            throwLabel.Size = new Size(Scales.GameLabelWidth, Scales.GameInnerHeight);
+            throwLabel.Font = new Font(FontFamily.GenericSansSerif, 10);
             throwLabel.TextAlign = ContentAlignment.MiddleCenter;
             throwLabel.BackColor = Color.LemonChiffon;
             throwLabel.Text = "Rzuty";
-            throwNumber.Location = new Point(turnLabel.Width + turnNumber.Width + throwLabel.Width + 6, 2);
-            throwNumber.Size = new Size(diceRolled.Width / 10 + 3, 23);
+            throwNumber.Location = new Point(Scales.ThrowNumberLocationX, 2);
+            throwNumber.Size = new Size(Scales.GameNumberWidth, Scales.GameInnerHeight);
             throwNumber.TextAlign = ContentAlignment.MiddleCenter;
             throwNumber.BackColor = Color.LemonChiffon;
             throwNumber.Font = new Font(FontFamily.GenericSansSerif, 10, FontStyle.Bold);
             throwNumber.Text = "0";
 
-            //default buttons parameters
-            int throwButtonWidth = 5 * diceRolled.Width / 20 + 2;
-            int throwButtonHeight = 25;
-            int throwDiceButtonLocationX = turnLabel.Width + turnNumber.Width + throwLabel.Width + throwNumber.Width + 7;
-            int newGameButtonX = diceChoosen.Location.X;//257 + (20 * diceChoosen.Size.Width / 100);
-            int newGameButtonWidth = diceChoosen.Size.Width - 2;
-
-            throwDiceButton.Location = new Point(throwDiceButtonLocationX, 1);
-            throwDiceButton.Size = new Size(throwButtonWidth, throwButtonHeight);
+            throwDiceButton.Location = new Point(Scales.ThrowButtonLocationX, 1);
+            throwDiceButton.Size = new Size(Scales.ThrowButtonWidth, Scales.ThrowButtonHeight);
             throwDiceButton.Text = "Rzuć";
             throwDiceButton.BackColor = SystemColors.Control;
             //adding turn panel and throw button to game panel
@@ -92,14 +85,14 @@
             {
                 diceRolledLabel[i] = new Label();
                 diceChoosenLabel[i] = new Label();
-                diceRolledLabel[i].Location = new Point(2 + 47 * i, 2);
-                diceRolledLabel[i].Size = new Size(47, 47);
+                diceRolledLabel[i].Location = new Point(Scales.DicedImageLocationX[i], 2);
+                diceRolledLabel[i].Size = new Size(Scales.DicedImageSize, Scales.DicedImageSize);
                 diceRolledLabel[i].Tag = i;
                 diceChoosenLabel[i].Tag = i;
-                diceChoosenLabel[i].Location = new Point(2 + 47 * i, 2);
-                diceChoosenLabel[i].Size = new Size(47, 47);
-                diceRolledLabel[i].Image = Properties.Resources.kosci05nowy;
-                diceChoosenLabel[i].Image = Properties.Resources.pusty;
+                diceChoosenLabel[i].Location = new Point(Scales.DicedImageLocationX[i], 2);
+                diceChoosenLabel[i].Size = new Size(Scales.DicedImageSize, Scales.DicedImageSize);
+                diceRolledLabel[i].Image = Scales.setDiceImage(0);
+                diceChoosenLabel[i].Image = Scales.setDiceImage(0);
                 diceRolled.Controls.Add(diceRolledLabel[i]);
                 diceChoosen.Controls.Add(diceChoosenLabel[i]);
                 if (i < 4)
@@ -110,8 +103,8 @@
                     addPlayerButton[i] = new MyButton();
                     playerName[i] = new Label();
 
-                    playerPanel[i].Location = new Point(281, diceChoosen.Location.Y + diceChoosen.Size.Height + 3 + (30 * i));
-                    playerPanel[i].Size = new Size(diceChoosen.Width, 27);
+                    playerPanel[i].Location = new Point(Scales.RightPanelsLocationX, Scales.PlayerPanelLocationY[i]);
+                    playerPanel[i].Size = new Size(Scales.RightPanelsWidth, Scales.PlayerPanelHeight);
                     playerPanel[i].BackColor = Color.Black;
 
                     playerNumber[i].Location = new Point(2, 2);
@@ -128,18 +121,18 @@
                     }
 
                     playerTextBox[i].Location = new Point(playerNumber[i].Location.X + playerNumber[i].Width + 2, 2);
-                    playerTextBox[i].Size = new Size((5 * playerPanel[i].Width) / 10 + 6, playerPanel[i].Height - 4);
+                    playerTextBox[i].MinimumSize = new Size(Scales.PlayerNameWidth, Scales.PlayerNameHeight);
                     playerTextBox[i].Visible = false;
 
                     playerName[i].Location = new Point(playerTextBox[i].Location.X, 2);
-                    playerName[i].Size = new Size(playerTextBox[i].Width, playerTextBox[i].Height);
+                    playerName[i].Size = new Size(Scales.PlayerNameWidth, Scales.PlayerNameHeight);
                     playerName[i].BackColor = Color.LemonChiffon;
                     playerName[i].Tag = i;
                     playerName[i].TextAlign = ContentAlignment.MiddleCenter;
                     playerName[i].Font = new Font("Verdana", 10, FontStyle.Bold);
 
-                    addPlayerButton[i].Location = new Point(throwDiceButtonLocationX, 1);
-                    addPlayerButton[i].Size = new Size(throwButtonWidth, playerPanel[i].Height - 2);
+                    addPlayerButton[i].Location = new Point(Scales.ThrowButtonLocationX, 1);
+                    addPlayerButton[i].Size = new Size(Scales.ThrowButtonWidth, playerPanel[i].Height - 2);
                     addPlayerButton[i].Text = " Dodaj";
                     addPlayerButton[i].TextAlign = ContentAlignment.MiddleCenter;
                     addPlayerButton[i].BackColor = SystemColors.Control;
@@ -154,15 +147,15 @@
             }
 
             //panel with buttons
-            buttonsPanel.Location = new Point(newGameButtonX, playerPanel[3].Location.Y + playerPanel[3].Size.Height + 2);
-            buttonsPanel.Size = new Size(239, 52);
+            buttonsPanel.Location = new Point(Scales.RightPanelsLocationX, Scales.ButtonsPanelLocationY);
+            buttonsPanel.Size = new Size(Scales.RightPanelsWidth, Scales.ButtonsPanelHeight);
             buttonsPanel.BackColor = Color.Black;
             newGameButton.Location = new Point(1, 1);
-            newGameButton.Size = new Size(newGameButtonWidth, 25);
+            newGameButton.Size = new Size(Scales.RightPanelsWidth - 2, Scales.ButtonsHeight);
             newGameButton.Text = "Rozpocznij grę";
             newGameButton.BackColor = SystemColors.Control;
-            bestScoresButton.Location = new Point(1, 26);
-            bestScoresButton.Size = new Size(newGameButtonWidth, 25);
+            bestScoresButton.Location = new Point(1, Scales.ButtonsHeight + 1);
+            bestScoresButton.Size = new Size(Scales.RightPanelsWidth - 2, Scales.ButtonsHeight);
             bestScoresButton.Text = "Najlepsze wyniki";
             bestScoresButton.BackColor = SystemColors.Control;
             buttonsPanel.Controls.Add(newGameButton);

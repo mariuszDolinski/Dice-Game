@@ -118,8 +118,8 @@ namespace Dice_Game
             for (int i = 0; i < 5; i++)
             {
                 choosenDice[i] = false;
-                diceChoosenLabel[i].Image = Properties.Resources.pusty;
-                diceRolledLabel[i].Image = Properties.Resources.pusty;
+                diceChoosenLabel[i].Image = Scales.setDiceImage(0);
+                diceRolledLabel[i].Image = Scales.setDiceImage(0);
             }
             if(mode)
             {
@@ -243,12 +243,12 @@ namespace Dice_Game
                 {
                     switch (throwResult[i])
                     {
-                        case 1: diceRolledLabel[i].Image = Properties.Resources.kosci01; break;
-                        case 2: diceRolledLabel[i].Image = Properties.Resources.kosci02; break;
-                        case 3: diceRolledLabel[i].Image = Properties.Resources.kosci03; break;
-                        case 4: diceRolledLabel[i].Image = Properties.Resources.kosci04; break;
-                        case 5: diceRolledLabel[i].Image = Properties.Resources.kosci05; break;
-                        case 6: diceRolledLabel[i].Image = Properties.Resources.kosci06; break;
+                        case 1: diceRolledLabel[i].Image = Scales.setDiceImage(1); break;
+                        case 2: diceRolledLabel[i].Image = Scales.setDiceImage(2); break;
+                        case 3: diceRolledLabel[i].Image = Scales.setDiceImage(3); break;
+                        case 4: diceRolledLabel[i].Image = Scales.setDiceImage(4); break;
+                        case 5: diceRolledLabel[i].Image = Scales.setDiceImage(5); break;
+                        case 6: diceRolledLabel[i].Image = Scales.setDiceImage(6); break;
                     }
                 }
             }
@@ -532,7 +532,8 @@ namespace Dice_Game
             if (File.Exists(pathBestScores))
             {
                 string hsDeserialized = File.ReadAllText(pathBestScores);
-                highScores = JsonConvert.DeserializeObject<BestScores>(hsDeserialized);
+                if(hsDeserialized != null)
+                    highScores = JsonConvert.DeserializeObject<BestScores>(hsDeserialized);
             }
             else
             {
@@ -665,7 +666,7 @@ namespace Dice_Game
                 if (!choosenDice[i])
                 {
                     diceChoosenLabel[i].Image = diceRolledLabel[i].Image;
-                    diceRolledLabel[i].Image = Properties.Resources.pusty;
+                    diceRolledLabel[i].Image = Scales.setDiceImage(0);
                     choosenDice[i] = true;
                 }
             }
@@ -680,7 +681,7 @@ namespace Dice_Game
                 if (choosenDice[i])
                 {
                     diceRolledLabel[i].Image = diceChoosenLabel[i].Image;
-                    diceChoosenLabel[i].Image = Properties.Resources.pusty;
+                    diceChoosenLabel[i].Image = Scales.setDiceImage(0);
                     choosenDice[i] = false;
                 }
             }
@@ -748,8 +749,8 @@ namespace Dice_Game
                         for (int k = 0; k < 5; k++)
                         {
                             choosenDice[k] = false;
-                            diceChoosenLabel[k].Image = Properties.Resources.pusty;
-                            diceRolledLabel[k].Image = Properties.Resources.pusty;
+                            diceChoosenLabel[k].Image = Scales.setDiceImage(0);
+                            diceRolledLabel[k].Image = Scales.setDiceImage(0);
                         }
                         turnNumber.Text = currentTurn.ToString();
                         throwNumber.Text = currentThrow.ToString();
