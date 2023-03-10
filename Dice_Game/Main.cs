@@ -2,13 +2,16 @@ namespace Dice_Game
 {
     public partial class Main : Form
     {
-        private Game game;
+        private Game _game;
+        private MenuUtils _menuUtils;
+
         public Main()
         {
             InitializeComponent();
 
-            game = new Game(this, 1.5F);
-            game.MouseEventsInitalize();
+            _game = new Game(this, 1.5F);
+            _game.MouseEventsInitalize();
+            _menuUtils = new MenuUtils(this, _game);
             MaximumSize = new Size(this.Width, this.Height);
             MinimumSize = new Size(this.Width, this.Height);
         }
@@ -17,7 +20,7 @@ namespace Dice_Game
         {
             dpiStripMenuItem100.Checked = false;
             dpiStripMenuItem150.Checked = true;
-            game.RenderComponents(this, 1.5F);
+            _game.RenderComponents(this, 1.5F);
             Refresh();
         }
 
@@ -25,7 +28,7 @@ namespace Dice_Game
         {
             dpiStripMenuItem100.Checked = true;
             dpiStripMenuItem150.Checked = false;
-            game.RenderComponents(this, 1.0F);
+            _game.RenderComponents(this, 1.0F);
             Refresh();
         }
     }

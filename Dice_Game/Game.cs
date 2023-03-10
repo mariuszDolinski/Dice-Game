@@ -161,6 +161,7 @@ namespace Dice_Game
                             winnersCount++;
                         }
                     }
+
                     if(winnersCount == 1)
                         MessageBox.Show($"Gracz {player[winnerIndex].Name} wygrał. Gratulacje!",
                         "Koniec gry", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -561,7 +562,7 @@ namespace Dice_Game
 
         public void MouseEventsInitalize()
         {
-            newGameButton.MouseClick += new MouseEventHandler(newGameButton_MouseClick);
+            newGameButton.MouseClick += new MouseEventHandler(NewGameButton_MouseClick);
             throwDiceButton.MouseClick += new MouseEventHandler(throwDiceButton_MouseClick);
             bestScoresButton.MouseClick += new MouseEventHandler(bestScoresButton_MouseClick);
             for (int i = 0; i < 5; i++)
@@ -585,6 +586,14 @@ namespace Dice_Game
             }
         }
 
+        public void ShowPlayerTextBox(int playerNumber)
+        {
+            playerName[playerNumber].Visible = false;
+            playerTextBox[playerNumber].Visible = true;
+            addPlayerButton[playerNumber].Text = "Dodaj";
+            addPlayerMode[playerNumber] = 1;
+        }
+
         #region MouseEventHandlers implementation
         private void playerName_MouseDoubleClick(object? sender, MouseEventArgs e)
         {
@@ -593,10 +602,7 @@ namespace Dice_Game
                 Label label = (Label)sender;
                 int i = (int)label.Tag;
 
-                playerName[i].Visible = false;
-                playerTextBox[i].Visible = true;
-                addPlayerButton[i].Text = "Dodaj";
-                addPlayerMode[i] = 1;
+                ShowPlayerTextBox(i);
             }
         }
         private void addPlayerButton_MouseClick(object? sender, MouseEventArgs e)
@@ -629,7 +635,7 @@ namespace Dice_Game
                 }
             }
         }
-        private void newGameButton_MouseClick(object? sender, MouseEventArgs e)
+        public void NewGameButtonClicked()
         {
             if (numberOfPlayers() > 0)
             {
@@ -654,6 +660,10 @@ namespace Dice_Game
                 message += "Dodaj gracza kilkając dwa razy w pole obok przycisku 'Dodaj'";
                 MessageBox.Show(message, "UWAGA", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+        }
+        private void NewGameButton_MouseClick(object? sender, MouseEventArgs e)
+        {
+            NewGameButtonClicked();
         }
         private void throwDiceButton_MouseClick(object? sender, MouseEventArgs e)
         {
