@@ -1,41 +1,48 @@
 ﻿namespace Dice_Game
 {
+    //wydzielić inicjalizację tablic aby nie icijalizowały się za każdym razem pzy zmianie skali
     internal class GameBoard
     {
-        public GameBoard(Main main)
+        public GameBoard(Main main, float scale)
         {
-            initComponents(main);
+            InitializeComponents(main, scale);
+            RenderComponents(main, scale);
         }
 
-        //components
-        protected ScoreBoard scoreBoard = new ScoreBoard();
-        protected Panel scoresPanel = new Panel();//container for scoreBoard
-        protected Panel diceRolled = new Panel();//container for rolling dice
-        protected Panel diceChoosen = new Panel();//container for choosen dice
-        protected Panel game = new Panel();//container for game info
-        protected Panel[] playerPanel = new Panel[4];
-        protected Panel buttonsPanel = new Panel();
-        protected Label turnLabel = new Label();
-        protected Label turnNumber = new Label();
-        protected Label throwLabel = new Label();
-        protected Label throwNumber = new Label();
-        protected MyButton throwDiceButton = new MyButton();//button to throw dice
-        protected Label[] diceRolledLabel = new Label[5];
-        protected Label[] diceChoosenLabel = new Label[5];
-        protected Label[] playerNumber = new Label[4];
-        protected TextBox[] playerTextBox = new TextBox[4];
-        protected MyButton[] addPlayerButton = new MyButton[4];
-        protected Label[] playerName = new Label[4];
-        protected MyButton newGameButton = new MyButton();//button to start/end game
-        protected MyButton bestScoresButton = new MyButton();
+        #region components definition
+        protected ScoreBoard scoreBoard;
+        protected Panel scoresPanel;//container for scoreBoard
+        protected Panel diceRolled;//container for rolling dice
+        protected Panel diceChoosen;//container for choosen dice
+        protected Panel game;//container for game info
+        protected Panel[] playerPanel;
+        protected Panel buttonsPanel;
+        protected Label turnLabel;
+        protected Label turnNumber;
+        protected Label throwLabel;
+        protected Label throwNumber;
+        protected MyButton throwDiceButton;//button to throw dice
+        protected Label[] diceRolledLabel;
+        protected Label[] diceChoosenLabel;
+        protected Label[] playerNumber;
+        protected TextBox[] playerTextBox;
+        protected MyButton[] addPlayerButton;
+        protected Label[] playerName;
+        protected MyButton newGameButton;//button to start/end game
+        protected MyButton bestScoresButton;
+        #endregion
 
-        private void initComponents(Main main)
+        public void RenderComponents(Main main, float scale)
         {
+            Scales.MenuHeight = main.menuStrip.Height;
+            Scales.Init(scale);
+            scoreBoard.Render();
             //set properties for main panels
-            scoresPanel.Location = new Point(2, 2);
+            if (Scales.Scale == 1.5F) main.Height -= 7;
+            scoresPanel.Location = new Point(2, 2 + main.menuStrip.Height);
             scoresPanel.Size = new Size(Scales.ScoresPanelWidth, Scales.ScoresPanelHeight);
             scoresPanel.BackColor = Color.Black;
-            diceRolled.Location = new Point(Scales.RightPanelsLocationX, 2);
+            diceRolled.Location = new Point(Scales.RightPanelsLocationX, 2 + main.menuStrip.Height);
             diceRolled.Size = new Size(Scales.RightPanelsWidth, Scales.DicedPanelHeight);
             diceRolled.BackColor = Color.Black;
             game.Location = new Point(Scales.RightPanelsLocationX, Scales.GameLocationY);
@@ -81,10 +88,8 @@
             game.Controls.Add(throwNumber);
             game.Controls.Add(throwDiceButton);
 
-            for (int i = 0; i < ScoreBoard.BoardWidth; i++)
+            for (int i = 0; i < 5; i++)
             {
-                diceRolledLabel[i] = new Label();
-                diceChoosenLabel[i] = new Label();
                 diceRolledLabel[i].Location = new Point(Scales.DicedImageLocationX[i], 2);
                 diceRolledLabel[i].Size = new Size(Scales.DicedImageSize, Scales.DicedImageSize);
                 diceRolledLabel[i].Tag = i;
@@ -97,12 +102,6 @@
                 diceChoosen.Controls.Add(diceChoosenLabel[i]);
                 if (i < 4)
                 {
-                    playerPanel[i] = new Panel();
-                    playerNumber[i] = new Label();
-                    playerTextBox[i] = new TextBox();
-                    addPlayerButton[i] = new MyButton();
-                    playerName[i] = new Label();
-
                     playerPanel[i].Location = new Point(Scales.RightPanelsLocationX, Scales.PlayerPanelLocationY[i]);
                     playerPanel[i].Size = new Size(Scales.RightPanelsWidth, Scales.PlayerPanelHeight);
                     playerPanel[i].BackColor = Color.Black;
@@ -183,6 +182,43 @@
             main.Controls.Add(game);
             main.Controls.Add(diceChoosen);
             main.Controls.Add(buttonsPanel);
+        }
+
+        public void InitializeComponents(Main main, float scale)
+        {
+            scoreBoard = new ScoreBoard();
+            scoresPanel = new Panel();
+            diceRolled = new Panel();
+            diceChoosen = new Panel();
+            game = new Panel();
+            buttonsPanel = new Panel();
+            turnLabel = new Label();
+            turnNumber = new Label();
+            throwLabel = new Label();
+            throwNumber = new Label();
+            throwDiceButton = new MyButton();
+            newGameButton = new MyButton();
+            bestScoresButton = new MyButton();
+            diceRolledLabel = new Label[5];
+            diceChoosenLabel = new Label[5];
+            playerNumber = new Label[4];
+            playerTextBox = new TextBox[4];
+            addPlayerButton = new MyButton[4];
+            playerName = new Label[4];
+            playerPanel = new Panel[4];
+            for(int i=0; i<5; i++) 
+            {
+                diceRolledLabel[i] = new Label();
+                diceChoosenLabel[i] = new Label();
+                if (i < 4)
+                {
+                    playerNumber[i] = new Label();
+                    playerTextBox[i] = new TextBox();
+                    addPlayerButton[i] = new MyButton();
+                    playerName[i] = new Label();
+                    playerPanel[i] = new Panel();
+                }
+            }
         }
 
         /// <summary>

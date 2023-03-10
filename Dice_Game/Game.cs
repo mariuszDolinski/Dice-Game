@@ -4,7 +4,7 @@ namespace Dice_Game
 {
     internal class Game : GameBoard
     {
-        public Game(Main main) : base(main)
+        public Game(Main main, float scale) : base(main, scale)
         {
             generate = new Random();
             player = new DicePlayer[4];
@@ -13,7 +13,6 @@ namespace Dice_Game
             choosenDice = new bool[5];
             choosenCategories = new bool[4, 19];
             addPlayerMode = new int[4];
-            //rules = false;
             initGame();
         }
 
@@ -33,12 +32,12 @@ namespace Dice_Game
         private int currentThrow;
         private bool showPossiblePoints; //indicate if points should be shown in table for current player
         private int currentPlayer; //index of active player
-        private int firstPlayer; //index of first player in game
+        //private int firstPlayer; //index of first player in game
         private int lastPlayer; //index of last player in game
         private int[] addPlayerMode; //use to determine state of addPlayer button
-        //private bool rules; // if true rules panel is shown
 
-        private const string pathBestScores = @"bs\bestscores.json";
+        private const string _bestScoresFileDirectory = "bs";
+        private const string _pathBestScores = _bestScoresFileDirectory + @"\bestscores.json";
         #endregion
 
         private void initGame()
@@ -61,7 +60,7 @@ namespace Dice_Game
             currentTurn = 1;
             currentThrow = 0;
             currentPlayer = findFirstPlayer();
-            firstPlayer = currentPlayer;
+            //firstPlayer = currentPlayer;
             lastPlayer = findLastPlayer();
             setPlayersColors(currentPlayer);
             showPossiblePoints = false;
@@ -134,7 +133,7 @@ namespace Dice_Game
                         if (highScores.addBestScore(tPlayer))
                         {
                             string hsSerialized = JsonConvert.SerializeObject(highScores, Formatting.Indented);
-                            File.WriteAllText(pathBestScores, hsSerialized);
+                            File.WriteAllText(_pathBestScores, hsSerialized);
                             MessageBox.Show($"Gracz {player[i].Name} uzyskał jeden z najlepszych wyników" +
                                 Environment.NewLine + "Wejdź w Najlepsze wyniki aby sprawdzić pozycję.",
                                 "Gratulacje!", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -152,7 +151,21 @@ namespace Dice_Game
                             winnerIndex = i;
                         }
                     }
-                    MessageBox.Show($"Gracz {player[winnerIndex].Name} wygrał. Gratulacje!",
+                    int[] winners = new int[4] {0, 0, 0, 0};
+                    int winnersCount = 0;
+                    for(int i = 0; i < 4; i++)
+                    {
+                        if (player[i].Active && player[i].Score == player[winnerIndex].Score)
+                        {
+                            winners[i] = 1;
+                            winnersCount++;
+                        }
+                    }
+                    if(winnersCount == 1)
+                        MessageBox.Show($"Gracz {player[winnerIndex].Name} wygrał. Gratulacje!",
+                        "Koniec gry", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    else
+                        MessageBox.Show($"Gra zakończona remisem.",
                         "Koniec gry", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
@@ -529,9 +542,12 @@ namespace Dice_Game
 
         private void initBestScoresFile()
         {
-            if (File.Exists(pathBestScores))
+            Directory.CreateDirectory(_bestScoresFileDirectory).
+                Attributes |= FileAttributes.Hidden;
+            
+            if (File.Exists(_pathBestScores))
             {
-                string hsDeserialized = File.ReadAllText(pathBestScores);
+                string hsDeserialized = File.ReadAllText(_pathBestScores);
                 if(hsDeserialized != null)
                     highScores = JsonConvert.DeserializeObject<BestScores>(hsDeserialized);
             }
@@ -539,7 +555,7 @@ namespace Dice_Game
             {
                 highScores.createDefaultList();
                 string hsSerialized = JsonConvert.SerializeObject(highScores, Formatting.Indented);
-                File.WriteAllText(pathBestScores, hsSerialized);
+                File.WriteAllText(_pathBestScores, hsSerialized);
             }
         }
 

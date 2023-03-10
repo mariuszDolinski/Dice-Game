@@ -6,28 +6,39 @@
 
         public static int BoardWidth = 5; //number of columns
         public static int BoardHeight = 19;//number of rows
-        public ScoreBoard()//initialize Labels
+        public ScoreBoard()
         {
             Board = new Label[BoardWidth, BoardHeight];
+            for (int i = 0; i < BoardWidth; i++)
+            {
+                for (int j = 0; j < BoardHeight; j++)
+                {
+                    Board[i, j] = new Label();
+                }
+            }
+            Render();
+        }
+
+        public void Render()
+        {
             for (int i = 0; i < BoardWidth; i++)
             {
 
                 for (int j = 0; j < BoardHeight; j++)
                 {
-                    Board[i, j] = new Label();
                     Board[i, j].BorderStyle = BorderStyle.None;
                     initColors(i, j);
                     Board[i, j].Font = new Font(FontFamily.GenericSansSerif, 10, FontStyle.Bold);
                     if (i == 0)
                     {
-                        Board[i, j].Location = new Point((int)Math.Round(Scales.Scale*(3 + i * 135)), (int)Math.Round(Scales.Scale * (3 + j * 20)));
-                        Board[i, j].Size = 
+                        Board[i, j].Location = new Point((int)Math.Round(Scales.Scale * (3 + i * 135)), (int)Math.Round(Scales.Scale * (3 + j * 20)));
+                        Board[i, j].Size =
                             new Size((int)Math.Round(Scales.Scale * 124), (int)Math.Round(Scales.Scale * 19));
                         Board[i, j].TextAlign = ContentAlignment.MiddleLeft;
                     }
                     else
                     {
-                        Board[i, j].Location = new Point((int)Math.Round(Scales.Scale*(92 + i * 36)), (int)Math.Round(Scales.Scale *(3 + j * 20)));
+                        Board[i, j].Location = new Point((int)Math.Round(Scales.Scale * (92 + i * 36)), (int)Math.Round(Scales.Scale * (3 + j * 20)));
                         Board[i, j].Size
                             = new Size((int)Math.Round(Scales.Scale * 35), (int)Math.Round(Scales.Scale * 19));
                         Board[i, j].TextAlign = ContentAlignment.MiddleCenter;

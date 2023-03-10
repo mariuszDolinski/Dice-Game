@@ -4,48 +4,51 @@ namespace Dice_Game
 {
     internal class Scales
     {
-        public static readonly float Scale = 1.5F;
-        public static readonly int ScoresPanelWidth;
-        public static readonly int ScoresPanelHeight;
-        public static readonly int RightPanelsWidth;
-        public static readonly int DicedPanelHeight;
-        public static readonly int DicedChoosenPanelLocationY;
-        public static readonly int[] DicedImageLocationX;
-        public static readonly int DicedImageSize;
-        public static readonly int RightPanelsLocationX;
-        public static readonly int GameLocationY;
-        public static readonly int GamePanelHeight;
-        public static readonly int GameLabelWidth;
-        public static readonly int GameInnerHeight;
-        public static readonly int GameNumberWidth;
-        public static readonly int TurnNumberLocationX;
-        public static readonly int ThrowLabelLocationX;
-        public static readonly int ThrowNumberLocationX;
-        public static readonly int ThrowButtonLocationX;
-        public static readonly int ThrowButtonWidth;
-        public static readonly int ThrowButtonHeight;
-        public static readonly int PlayerPanelLocationX;
-        public static readonly int[] PlayerPanelLocationY;
-        public static readonly int PlayerPanelHeight;
-        public static readonly int PlayerNameWidth;
-        public static readonly int PlayerNameHeight;
-        public static readonly int ButtonsPanelLocationY;
-        public static readonly int ButtonsPanelHeight;
-        public static readonly int ButtonsHeight;
+        public static int MenuHeight { get; set; }
+        public static float Scale { get; set; }
+        public static int ScoresPanelWidth;
+        public static int ScoresPanelHeight;
+        public static int RightPanelsWidth;
+        public static int DicedPanelHeight;
+        public static int DicedChoosenPanelLocationY;
+        public static int[] DicedImageLocationX;
+        public static int DicedImageSize;
+        public static int RightPanelsLocationX;
+        public static int GameLocationY;
+        public static int GamePanelHeight;
+        public static int GameLabelWidth;
+        public static int GameInnerHeight;
+        public static int GameNumberWidth;
+        public static int TurnNumberLocationX;
+        public static int ThrowLabelLocationX;
+        public static int ThrowNumberLocationX;
+        public static int ThrowButtonLocationX;
+        public static int ThrowButtonWidth;
+        public static int ThrowButtonHeight;
+        public static int PlayerPanelLocationX;
+        public static int[] PlayerPanelLocationY;
+        public static int PlayerPanelHeight;
+        public static int PlayerNameWidth;
+        public static int PlayerNameHeight;
+        public static int ButtonsPanelLocationY;
+        public static int ButtonsPanelHeight;
+        public static int ButtonsHeight;
 
         //bestscore
-        public static readonly int WindowWidthBS;
-        public static readonly int WindowHeightBS;
-        public static readonly int PanelWidthBS;
-        public static readonly int PanelHeightBS;
-        public static readonly int FirstColBS;
-        public static readonly int SecondColBS;
-        public static readonly int ThirdColBS;
-        public static readonly int FourthColBS;
-        public static readonly int CellHeightBS;
+        public static int WindowWidthBS;
+        public static int WindowHeightBS;
+        public static int PanelWidthBS;
+        public static int PanelHeightBS;
+        public static int FirstColBS;
+        public static int SecondColBS;
+        public static int ThirdColBS;
+        public static int FourthColBS;
+        public static int CellHeightBS;
 
-        static Scales() 
+        public static void Init(float scale) 
         {
+            Scale = scale;
+            int offset;
             if (Scale == 1.0F)
                 ScoresPanelWidth = (int)Math.Round(Scale * 274);
             else
@@ -59,14 +62,14 @@ namespace Dice_Game
             GamePanelHeight = (int)Math.Round(Scale * 27);
             if(Scale == 1.0F)
             {
-                RightPanelsLocationX = (int)Math.Round(Scale * 281);
-                GameLocationY = (int)Math.Round(Scale * 56);
-                DicedChoosenPanelLocationY = (int)Math.Round(Scale * (GameLocationY + GamePanelHeight + 4));
+                RightPanelsLocationX = (int)Math.Round(Scale * 277);
+                GameLocationY = (int)Math.Round(Scale * 56) + MenuHeight - 1;
+                DicedChoosenPanelLocationY = (int)Math.Round(Scale * (GameLocationY + GamePanelHeight + 2));
             }
             else
             {
                 RightPanelsLocationX = (int)Math.Round(Scale * 281) - 7;
-                GameLocationY = (int)Math.Round(Scale * 56) - 2;
+                GameLocationY = (int)Math.Round(Scale * 56) - 2 + MenuHeight;
                 DicedChoosenPanelLocationY = GameLocationY + GamePanelHeight + 3;
             }
             DicedImageLocationX = new int[ScoreBoard.BoardWidth];
@@ -74,14 +77,18 @@ namespace Dice_Game
             {
                 DicedImageLocationX[i] = 2 + (int)Math.Round(Scale * 47 * i);
             }
-            DicedImageSize = (int)Math.Round(Scale * 48);
+            DicedImageSize = (Scale == 1.5F) ? (int)Math.Round(Scale * 48) : (int)Math.Round(Scale * 47);
             GameLabelWidth = (int)Math.Round((double)(5 * RightPanelsWidth / 20));
             GameInnerHeight = (Scale == 1.0F) ? (int)Math.Round(Scale * 23) : (int)Math.Round(Scale * 24);
             GameNumberWidth = (int)Math.Round((double)(RightPanelsWidth / 10 + 3));
-            TurnNumberLocationX = GameLabelWidth + 4;
-            ThrowLabelLocationX = GameLabelWidth + GameNumberWidth + 6;
-            ThrowNumberLocationX = 2 * GameLabelWidth + GameNumberWidth + 8;
-            ThrowButtonLocationX = 2 * GameLabelWidth + 2 * GameNumberWidth + 9;
+            offset = (Scale == 1.0) ? 3 : 4;
+            TurnNumberLocationX = GameLabelWidth + offset;
+            offset = (Scale == 1.0) ? 4 : 6;
+            ThrowLabelLocationX = GameLabelWidth + GameNumberWidth + offset;
+            offset = (Scale == 1.0) ? 5 : 8;
+            ThrowNumberLocationX = 2 * GameLabelWidth + GameNumberWidth + offset;
+            offset = (Scale == 1.0) ? 5 : 9;
+            ThrowButtonLocationX = 2 * GameLabelWidth + 2 * GameNumberWidth + offset;
             ThrowButtonWidth = (int)Math.Round((double)(5 * RightPanelsWidth / 20 + 5));
             ThrowButtonHeight = GameInnerHeight + 2;
             PlayerPanelHeight = (int)Math.Round(Scale * 27);
@@ -91,12 +98,15 @@ namespace Dice_Game
                 if (Scale == 1.5F)
                     PlayerPanelLocationY[i] = (int)Math.Round((double)(DicedChoosenPanelLocationY + DicedPanelHeight + 3 + (43 * i)));
                 else
-                    PlayerPanelLocationY[i] = (int)Math.Round((double)(DicedChoosenPanelLocationY + DicedPanelHeight + 3 + (31 * i)));
+                    PlayerPanelLocationY[i] = (int)Math.Round((double)(DicedChoosenPanelLocationY + DicedPanelHeight + 3 + (29 * i))-1);
             }
-            int offset = (Scale == 1.0) ? 6 : 8;
+            offset = (Scale == 1.0) ? 6 : 8;
             PlayerNameWidth = (5 * RightPanelsWidth) / 10 + offset;
             PlayerNameHeight = PlayerPanelHeight - 4;
-            ButtonsPanelLocationY = PlayerPanelLocationY[3] + PlayerPanelHeight + 3;
+            if(Scale == 1.5F)
+                ButtonsPanelLocationY = PlayerPanelLocationY[3] + PlayerPanelHeight + 3;
+            else
+                ButtonsPanelLocationY = PlayerPanelLocationY[3] + PlayerPanelHeight + 2;
             ButtonsPanelHeight = (int)Math.Round(Scale * 52);
             ButtonsHeight = (int)Math.Round(Scale * 25);
 
