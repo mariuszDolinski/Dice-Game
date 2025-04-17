@@ -41,6 +41,7 @@
             skalaDpiToolStripMenuItem = new ToolStripMenuItem();
             dpiStripMenuItem100 = new ToolStripMenuItem();
             dpiStripMenuItem150 = new ToolStripMenuItem();
+            dpiStripMenuItem125 = new ToolStripMenuItem();
             menuStrip.SuspendLayout();
             SuspendLayout();
             // 
@@ -79,29 +80,29 @@
             // 
             ToolStripMenuItemAddPlayer1.Name = "ToolStripMenuItemAddPlayer1";
             ToolStripMenuItemAddPlayer1.ShortcutKeys = Keys.Control | Keys.D1;
-            ToolStripMenuItemAddPlayer1.Size = new Size(270, 34);
-            ToolStripMenuItemAddPlayer1.Text = "1.";
+            ToolStripMenuItemAddPlayer1.Size = new Size(195, 34);
+            ToolStripMenuItemAddPlayer1.Text = "I.";
             // 
             // ToolStripMenuItemAddPlayer2
             // 
             ToolStripMenuItemAddPlayer2.Name = "ToolStripMenuItemAddPlayer2";
             ToolStripMenuItemAddPlayer2.ShortcutKeys = Keys.Control | Keys.D2;
-            ToolStripMenuItemAddPlayer2.Size = new Size(270, 34);
-            ToolStripMenuItemAddPlayer2.Text = "2.";
+            ToolStripMenuItemAddPlayer2.Size = new Size(195, 34);
+            ToolStripMenuItemAddPlayer2.Text = "II.";
             // 
             // ToolStripMenuItemAddPlayer3
             // 
             ToolStripMenuItemAddPlayer3.Name = "ToolStripMenuItemAddPlayer3";
             ToolStripMenuItemAddPlayer3.ShortcutKeys = Keys.Control | Keys.D3;
-            ToolStripMenuItemAddPlayer3.Size = new Size(270, 34);
-            ToolStripMenuItemAddPlayer3.Text = "3.";
+            ToolStripMenuItemAddPlayer3.Size = new Size(195, 34);
+            ToolStripMenuItemAddPlayer3.Text = "III.";
             // 
             // ToolStripMenuItemAddPlayer4
             // 
             ToolStripMenuItemAddPlayer4.Name = "ToolStripMenuItemAddPlayer4";
             ToolStripMenuItemAddPlayer4.ShortcutKeys = Keys.Control | Keys.D4;
-            ToolStripMenuItemAddPlayer4.Size = new Size(270, 34);
-            ToolStripMenuItemAddPlayer4.Text = "4.";
+            ToolStripMenuItemAddPlayer4.Size = new Size(195, 34);
+            ToolStripMenuItemAddPlayer4.Text = "IV.";
             // 
             // opcjeToolStripMenuItem
             // 
@@ -112,15 +113,15 @@
             // 
             // skalaDpiToolStripMenuItem
             // 
-            skalaDpiToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { dpiStripMenuItem100, dpiStripMenuItem150 });
+            skalaDpiToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { dpiStripMenuItem100, dpiStripMenuItem125, dpiStripMenuItem150 });
             skalaDpiToolStripMenuItem.Name = "skalaDpiToolStripMenuItem";
-            skalaDpiToolStripMenuItem.Size = new Size(188, 34);
+            skalaDpiToolStripMenuItem.Size = new Size(270, 34);
             skalaDpiToolStripMenuItem.Text = "Skala Dpi";
             // 
             // dpiStripMenuItem100
             // 
             dpiStripMenuItem100.Name = "dpiStripMenuItem100";
-            dpiStripMenuItem100.Size = new Size(159, 34);
+            dpiStripMenuItem100.Size = new Size(270, 34);
             dpiStripMenuItem100.Text = "100%";
             dpiStripMenuItem100.Click += dpiStripMenuItem100_Click;
             // 
@@ -129,9 +130,16 @@
             dpiStripMenuItem150.Checked = true;
             dpiStripMenuItem150.CheckState = CheckState.Checked;
             dpiStripMenuItem150.Name = "dpiStripMenuItem150";
-            dpiStripMenuItem150.Size = new Size(159, 34);
+            dpiStripMenuItem150.Size = new Size(270, 34);
             dpiStripMenuItem150.Text = "150%";
             dpiStripMenuItem150.Click += dpi150menuClick;
+            // 
+            // dpiStripMenuItem125
+            // 
+            dpiStripMenuItem125.Name = "dpiStripMenuItem125";
+            dpiStripMenuItem125.Size = new Size(270, 34);
+            dpiStripMenuItem125.Text = "125%";
+            dpiStripMenuItem125.Click += dpiStripMenuItem125_Click;
             // 
             // Main
             // 
@@ -164,5 +172,6 @@
         public ToolStripMenuItem ToolStripMenuItemAddPlayer2;
         public ToolStripMenuItem ToolStripMenuItemAddPlayer3;
         public ToolStripMenuItem ToolStripMenuItemAddPlayer4;
+        private ToolStripMenuItem dpiStripMenuItem125;
     }
 }

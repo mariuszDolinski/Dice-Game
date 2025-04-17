@@ -6,7 +6,7 @@
 
         public static int BoardWidth = 5; //number of columns
         public static int BoardHeight = 19;//number of rows
-        public ScoreBoard()
+        public ScoreBoard(int fontSize)
         {
             Board = new Label[BoardWidth, BoardHeight];
             for (int i = 0; i < BoardWidth; i++)
@@ -16,10 +16,10 @@
                     Board[i, j] = new Label();
                 }
             }
-            Render();
+            Render(fontSize);
         }
 
-        public void Render()
+        public void Render(int fontSize)
         {
             for (int i = 0; i < BoardWidth; i++)
             {
@@ -28,7 +28,7 @@
                 {
                     Board[i, j].BorderStyle = BorderStyle.None;
                     initColors(i, j);
-                    Board[i, j].Font = new Font(FontFamily.GenericSansSerif, 10, FontStyle.Bold);
+                    Board[i, j].Font = new Font(FontFamily.GenericSansSerif, fontSize, FontStyle.Bold);
                     if (i == 0)
                     {
                         Board[i, j].Location = new Point((int)Math.Round(Scales.Scale * (3 + i * 135)), (int)Math.Round(Scales.Scale * (3 + j * 20)));

@@ -3,10 +3,17 @@
     //wydzielić inicjalizację tablic aby nie icijalizowały się za każdym razem pzy zmianie skali
     internal class GameBoard
     {
-        public GameBoard(Main main, float scale)
+        public GameBoard(Main main, float scale, int dpi)
         {
-            InitializeComponents(main, scale);
-            RenderComponents(main, scale);
+            int fontSize = 0;
+            switch (dpi)
+            {
+                case 100: fontSize = 14; break;
+                case 125: fontSize = 12; break;
+                default: fontSize = 10; break;
+            }
+            InitializeComponents(fontSize);
+            RenderComponents(main, scale, fontSize);
         }
 
         #region components definition
@@ -32,11 +39,11 @@
         protected MyButton bestScoresButton;
         #endregion
 
-        public void RenderComponents(Main main, float scale)
+        public void RenderComponents(Main main, float scale, int fontSize)
         {
             Scales.MenuHeight = main.menuStrip.Height;
             Scales.Init(scale);
-            scoreBoard.Render();
+            scoreBoard.Render(fontSize);
             //set properties for main panels
             if (Scales.Scale == 1.5F) main.Height -= 7;
             scoresPanel.Location = new Point(2, 2 + main.menuStrip.Height);
@@ -54,7 +61,7 @@
 
             turnLabel.Location = new Point(2, 2);
             turnLabel.Size = new Size(Scales.GameLabelWidth, Scales.GameInnerHeight);
-            turnLabel.Font = new Font(FontFamily.GenericSansSerif, 10);
+            turnLabel.Font = new Font(FontFamily.GenericSansSerif, fontSize);
             turnLabel.TextAlign = ContentAlignment.MiddleCenter;
             turnLabel.BackColor = Color.LemonChiffon;
             turnLabel.Text = "Tura";
@@ -62,11 +69,11 @@
             turnNumber.Size = new Size(Scales.GameNumberWidth, Scales.GameInnerHeight);
             turnNumber.TextAlign = ContentAlignment.MiddleCenter;
             turnNumber.BackColor = Color.LemonChiffon;
-            turnNumber.Font = new Font(FontFamily.GenericSansSerif, 10, FontStyle.Bold);
+            turnNumber.Font = new Font(FontFamily.GenericSansSerif, fontSize, FontStyle.Bold);
             turnNumber.Text = "0";
             throwLabel.Location = new Point(Scales.ThrowLabelLocationX, 2);
             throwLabel.Size = new Size(Scales.GameLabelWidth, Scales.GameInnerHeight);
-            throwLabel.Font = new Font(FontFamily.GenericSansSerif, 10);
+            throwLabel.Font = new Font(FontFamily.GenericSansSerif, fontSize);
             throwLabel.TextAlign = ContentAlignment.MiddleCenter;
             throwLabel.BackColor = Color.LemonChiffon;
             throwLabel.Text = "Rzuty";
@@ -74,12 +81,13 @@
             throwNumber.Size = new Size(Scales.GameNumberWidth, Scales.GameInnerHeight);
             throwNumber.TextAlign = ContentAlignment.MiddleCenter;
             throwNumber.BackColor = Color.LemonChiffon;
-            throwNumber.Font = new Font(FontFamily.GenericSansSerif, 10, FontStyle.Bold);
+            throwNumber.Font = new Font(FontFamily.GenericSansSerif, fontSize, FontStyle.Bold);
             throwNumber.Text = "0";
 
             throwDiceButton.Location = new Point(Scales.ThrowButtonLocationX, 1);
             throwDiceButton.Size = new Size(Scales.ThrowButtonWidth, Scales.ThrowButtonHeight);
             throwDiceButton.Text = "Rzuć";
+            throwDiceButton.Font = new Font(FontFamily.GenericSansSerif, fontSize);
             throwDiceButton.BackColor = SystemColors.Control;
             //adding turn panel and throw button to game panel
             game.Controls.Add(turnLabel);
@@ -110,7 +118,7 @@
                     playerNumber[i].Size = new Size((2 * playerPanel[i].Width) / 10, playerPanel[i].Height - 4);
                     playerNumber[i].BackColor = Color.LightSteelBlue;
                     playerNumber[i].TextAlign = ContentAlignment.MiddleCenter;
-                    playerNumber[i].Font = new Font(FontFamily.GenericSansSerif, 10, FontStyle.Bold);
+                    playerNumber[i].Font = new Font(FontFamily.GenericSansSerif, fontSize, FontStyle.Bold);
                     switch (i)
                     {
                         case 0: playerNumber[i].Text = "I"; break;
@@ -133,6 +141,7 @@
                     addPlayerButton[i].Location = new Point(Scales.ThrowButtonLocationX, 1);
                     addPlayerButton[i].Size = new Size(Scales.ThrowButtonWidth, playerPanel[i].Height - 2);
                     addPlayerButton[i].Text = " Dodaj";
+                    addPlayerButton[i].Font = new Font(FontFamily.GenericSansSerif, fontSize);
                     addPlayerButton[i].TextAlign = ContentAlignment.MiddleCenter;
                     addPlayerButton[i].BackColor = SystemColors.Control;
                     addPlayerButton[i].Tag = i;
@@ -152,10 +161,12 @@
             newGameButton.Location = new Point(1, 1);
             newGameButton.Size = new Size(Scales.RightPanelsWidth - 2, Scales.ButtonsHeight);
             newGameButton.Text = "Rozpocznij grę";
+            newGameButton.Font = new Font(FontFamily.GenericSansSerif, fontSize);
             newGameButton.BackColor = SystemColors.Control;
             bestScoresButton.Location = new Point(1, Scales.ButtonsHeight + 1);
             bestScoresButton.Size = new Size(Scales.RightPanelsWidth - 2, Scales.ButtonsHeight);
             bestScoresButton.Text = "Najlepsze wyniki";
+            bestScoresButton.Font = new Font(FontFamily.GenericSansSerif, fontSize);
             bestScoresButton.BackColor = SystemColors.Control;
             buttonsPanel.Controls.Add(newGameButton);
             buttonsPanel.Controls.Add(bestScoresButton);
@@ -184,9 +195,9 @@
             main.Controls.Add(buttonsPanel);
         }
 
-        public void InitializeComponents(Main main, float scale)
+        public void InitializeComponents(int fontSize)
         {
-            scoreBoard = new ScoreBoard();
+            scoreBoard = new ScoreBoard(fontSize);
             scoresPanel = new Panel();
             diceRolled = new Panel();
             diceChoosen = new Panel();

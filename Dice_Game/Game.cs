@@ -4,7 +4,8 @@ namespace Dice_Game
 {
     internal class Game : GameBoard
     {
-        public Game(Main main, float scale) : base(main, scale)
+        private readonly Main _main;
+        public Game(Main main, float scale, int dpi) : base(main, scale, dpi)
         {
             generate = new Random();
             player = new DicePlayer[4];
@@ -13,6 +14,7 @@ namespace Dice_Game
             choosenDice = new bool[5];
             choosenCategories = new bool[4, 19];
             addPlayerMode = new int[4];
+            _main = main;
             initGame();
         }
 
@@ -233,6 +235,11 @@ namespace Dice_Game
                         throwResult[i] = generate.Next(6) + 1;
                     }
                 }
+                //throwResult[0] = 2;
+                //throwResult[1] = 2;
+                //throwResult[2] = 2;
+                //throwResult[3] = 2;
+                //throwResult[4] = 2;
                 countRepeats();
             }
         }
@@ -298,36 +305,43 @@ namespace Dice_Game
         {
             int points = 0;
             bool upper = false;
+            int upperScore;
             switch (j)//switch category
             {
                 case 1:
-                    scoreBoard.Board[i, j].Text = numberCount[0].ToString();
-                    points = numberCount[0];
+                    upperScore = isYahtzee(1) ? 5 : numberCount[0];
+                    scoreBoard.Board[i, j].Text = upperScore.ToString();
+                    points = upperScore;
                     upper = true;
                     break;
                 case 2:
-                    scoreBoard.Board[i, j].Text = (numberCount[1] * 2).ToString();
-                    points = 2 * numberCount[1];
+                    upperScore = isYahtzee(1) ? 10 : 2 * numberCount[1];
+                    scoreBoard.Board[i, j].Text = upperScore.ToString();
+                    points = upperScore;
                     upper = true;
                     break;
                 case 3:
-                    scoreBoard.Board[i, j].Text = (numberCount[2] * 3).ToString();
-                    points = 3 * numberCount[2];
+                    upperScore = (isYahtzee(1)) ? 15 : 3 * numberCount[2];
+                    scoreBoard.Board[i, j].Text = upperScore.ToString();
+                    points = upperScore;
                     upper = true;
                     break;
                 case 4:
-                    scoreBoard.Board[i, j].Text = (numberCount[3] * 4).ToString();
-                    points = 4 * numberCount[3];
+                    upperScore = isYahtzee(1) ? 20 : 4 * numberCount[3];
+                    scoreBoard.Board[i, j].Text = upperScore.ToString();
+                    points = upperScore;
                     upper = true;
                     break;
                 case 5:
-                    scoreBoard.Board[i, j].Text = (numberCount[4] * 5).ToString();
-                    points = 5 * numberCount[4];
+                    upperScore = isYahtzee(1) ? 25 : 5 * numberCount[4];
+                    scoreBoard.Board[i, j].Text = upperScore.ToString();
+                    points = upperScore;
                     upper = true;
                     break;
                 case 6:
-                    scoreBoard.Board[i, j].Text = (numberCount[5] * 6).ToString();
-                    points = 6 * numberCount[5];
+                    upperScore = isYahtzee(1) ? 30 : 6 * numberCount[5];
+                    scoreBoard.Board[i, j].Text = upperScore.ToString();
+                    points = upperScore;
                     upper = true;
                     break;
                 case 9:
@@ -397,7 +411,7 @@ namespace Dice_Game
                     break;
                 case 14:
                     upper = false;
-                    if (isYahtzee())
+                    if (isYahtzee(0))
                     {
                         points = 50 + (5 * (3 - currentThrow));
                         scoreBoard.Board[i, j].Text = points.ToString();
@@ -416,7 +430,7 @@ namespace Dice_Game
             }
             if (p)
             {
-                if (isYahtzee())
+                if (isYahtzee(0))
                     player[currentPlayer - 1].Yahtzees++;//increase yahtzees only after click
                 if (upper)
                     player[i - 1].UpperSum += points;
@@ -445,7 +459,7 @@ namespace Dice_Game
         private bool isTwoPairs()
         {
             int pairs = 0;
-            if (isYahtzee()) return true;
+            if (isYahtzee(1)) return true;
             if (isFourOfAKind()) return true;
             for (int i = 0; i < 6; i++)
             {
@@ -475,7 +489,7 @@ namespace Dice_Game
         }
         private bool isStraight()
         {
-            if (isYahtzee()) return true;
+            if (isYahtzee(1)) return true;
             if (numberCount[0] == 1 && numberCount[1] == 1 && numberCount[2] == 1 &&
                 numberCount[3] == 1 && numberCount[4] == 1) return true;
             if (numberCount[5] == 1 && numberCount[1] == 1 && numberCount[2] == 1 &&
@@ -485,7 +499,7 @@ namespace Dice_Game
         private bool isFullHouse()
         {
             bool three = false, two = false;
-            if (isYahtzee()) return true;
+            if (isYahtzee(1)) return true;
             for (int i = 0; i < 6; i++)
             {
                 if (numberCount[i] == 3) three = true;
@@ -494,12 +508,22 @@ namespace Dice_Game
             }
             return false;
         }
-        private bool isYahtzee()
+        /// <summary>
+        /// Checks if yathzze is thrown
+        /// </summary>
+        /// <param name="mode">if 1 return false if yahtzee category is not positive number for currentPlayer</param>
+        /// <returns></returns>
+        private bool isYahtzee(int mode)
         {
+            bool isYahtzee = false;
             for (int i = 0; i < 6; i++)
             {
-                if (numberCount[i] == 5) return true;
+                if (numberCount[i] == 5) isYahtzee = true;
             }
+            if(isYahtzee && mode == 0) return true;
+            else if (isYahtzee && mode == 1 && scoreBoard.Board[currentPlayer, 14].Text != ""
+                && scoreBoard.Board[currentPlayer, 14].Text != "0")
+                return true;
             return false;
         }
         private int chance()
@@ -518,7 +542,7 @@ namespace Dice_Game
         }
         private bool isLowerBonus() // +30 points for gaining all lower categories
         {
-            if (scoreBoard.Board[1, 9].Text != "" && scoreBoard.Board[1, 9].Text != "0"
+            if (scoreBoard.Board[currentPlayer, 9].Text != "" && scoreBoard.Board[currentPlayer, 9].Text != "0"
                 && scoreBoard.Board[currentPlayer, 10].Text != "" && scoreBoard.Board[currentPlayer, 10].Text != "0"
                 && scoreBoard.Board[currentPlayer, 11].Text != "" && scoreBoard.Board[currentPlayer, 11].Text != "0"
                 && scoreBoard.Board[currentPlayer, 12].Text != "" && scoreBoard.Board[currentPlayer, 12].Text != "0"
@@ -530,8 +554,8 @@ namespace Dice_Game
         }
         private bool isYahtzeeBonus() // +40 points for any extra Yahtzee except first
         {
-            if (isYahtzee() && player[currentPlayer - 1].Yahtzees > 1
-                && scoreBoard.Board[currentPlayer, 14].Text != "0") return true;
+            if (isYahtzee(1) && player[currentPlayer - 1].Yahtzees > 1) 
+                return true;
             return false;
         }
         private void calculateOverallScore()
@@ -550,7 +574,7 @@ namespace Dice_Game
             {
                 string hsDeserialized = File.ReadAllText(_pathBestScores);
                 if(hsDeserialized != null)
-                    highScores = JsonConvert.DeserializeObject<BestScores>(hsDeserialized);
+                    highScores = JsonConvert.DeserializeObject<BestScores>(hsDeserialized)!;
             }
             else
             {
@@ -560,7 +584,7 @@ namespace Dice_Game
             }
         }
 
-        public void MouseEventsInitalize()
+        public void MouseEventsInitalize(Main main)
         {
             newGameButton.MouseClick += new MouseEventHandler(NewGameButton_MouseClick);
             throwDiceButton.MouseClick += new MouseEventHandler(throwDiceButton_MouseClick);
@@ -582,56 +606,6 @@ namespace Dice_Game
                     scoreBoard.Board[i, j].MouseEnter += new EventHandler(scoreBoard_MouseEnter);
                     scoreBoard.Board[i, j].MouseLeave += new EventHandler(scoreBoard_MouseLeave);
                     scoreBoard.Board[i, j].MouseClick += new MouseEventHandler(scoreBoard_MouseClick);
-                }
-            }
-        }
-
-        public void ShowPlayerTextBox(int playerNumber)
-        {
-            playerName[playerNumber].Visible = false;
-            playerTextBox[playerNumber].Visible = true;
-            addPlayerButton[playerNumber].Text = "Dodaj";
-            addPlayerMode[playerNumber] = 1;
-        }
-
-        #region MouseEventHandlers implementation
-        private void playerName_MouseDoubleClick(object? sender, MouseEventArgs e)
-        {
-            if (!isGameOn && sender != null)
-            {
-                Label label = (Label)sender;
-                int i = (int)label.Tag;
-
-                ShowPlayerTextBox(i);
-            }
-        }
-        private void addPlayerButton_MouseClick(object? sender, MouseEventArgs e)
-        {
-            if (sender != null)
-            {
-                MyButton button = (MyButton)sender;
-                int i = (int)button.Tag;
-
-                if (addPlayerMode[i] != 0 && playerTextBox[i].Text.Length > 2)
-                {
-                    if (addPlayerMode[i] == 1)//adding player name mode
-                    {
-                        addPlayerButton[i].Text = "Usuń";
-                        playerName[i].Text = playerTextBox[i].Text;
-                        playerTextBox[i].Visible = false;
-                        playerName[i].Visible = true;
-                        addPlayerMode[i] = 2;
-                        player[i].Active = true;
-                        player[i].Name = playerName[i].Text;
-                    }
-                    else if (addPlayerMode[i] == 2 && isGameOn == false)//remove player when game is off
-                    {
-                        addPlayerButton[i].Text = "Dodaj";
-                        playerName[i].Text = "";
-                        addPlayerMode[i] = 0;
-                        player[i].Active = false;
-                        player[i].Name = "";
-                    }
                 }
             }
         }
@@ -659,6 +633,89 @@ namespace Dice_Game
                 message += Environment.NewLine;
                 message += "Dodaj gracza kilkając dwa razy w pole obok przycisku 'Dodaj'";
                 MessageBox.Show(message, "UWAGA", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+        public void ShowPlayerTextBox(int playerNumber)
+        {
+            if(!isGameOn)
+            {
+                playerName[playerNumber].Visible = false;
+                playerTextBox[playerNumber].Visible = true;
+                playerTextBox[playerNumber].Focus();
+                if (playerName[playerNumber].Text == string.Empty ) 
+                {
+                    addPlayerButton[playerNumber].Text = "Dodaj";
+                }
+                else
+                {
+                    addPlayerButton[playerNumber].Text = "Zmień";
+                }
+                addPlayerMode[playerNumber] = 1;
+            }
+        }
+        public void AddPlayerAction(int playerNumber, Main main)
+        {
+            if (addPlayerMode[playerNumber] != 0 && playerTextBox[playerNumber].Text.Length > 2)
+            {
+                if (addPlayerMode[playerNumber] == 1)//adding player name mode
+                {
+                    addPlayerButton[playerNumber].Text = "Usuń";
+                    playerName[playerNumber].Text = playerTextBox[playerNumber].Text;
+                    playerTextBox[playerNumber].Visible = false;
+                    playerName[playerNumber].Visible = true;
+                    addPlayerMode[playerNumber] = 2;
+                    player[playerNumber].Active = true;
+                    player[playerNumber].Name = playerName[playerNumber].Text;
+                    ChangePlayerAddMenuText(main, playerNumber, playerName[playerNumber].Text);
+                }
+                else if (addPlayerMode[playerNumber] == 2 && isGameOn == false)//remove player when game is off
+                {
+                    addPlayerButton[playerNumber].Text = "Dodaj";
+                    playerName[playerNumber].Text = "";
+                    addPlayerMode[playerNumber] = 0;
+                    player[playerNumber].Active = false;
+                    player[playerNumber].Name = "";
+                    ChangePlayerAddMenuText(main, playerNumber, "");
+                }
+            }
+        }
+        private void ChangePlayerAddMenuText(Main main, int playerNumber, string text)
+        {
+            switch (playerNumber)
+            {
+                case 0:
+                    main.ToolStripMenuItemAddPlayer1.Text = $"I. {text}";
+                    break;
+                case 1:
+                    main.ToolStripMenuItemAddPlayer2.Text = $"II. {text}";
+                    break;
+                case 2:
+                    main.ToolStripMenuItemAddPlayer3.Text = $"III. {text}";
+                    break;
+                case 3:
+                    main.ToolStripMenuItemAddPlayer4.Text = $"IV. {text}";
+                    break;
+            }
+        }
+
+        #region MouseEventHandlers implementation
+        private void playerName_MouseDoubleClick(object? sender, MouseEventArgs e)
+        {
+            if (!isGameOn && sender != null)
+            {
+                Label label = (Label)sender;
+                int i = (int)label.Tag;
+
+                ShowPlayerTextBox(i);
+            }
+        }
+        private void addPlayerButton_MouseClick(object? sender, MouseEventArgs e)
+        {
+            if (sender != null)
+            {
+                MyButton button = (MyButton)sender;
+                int i = (int)button.Tag;
+                AddPlayerAction(i, _main);
             }
         }
         private void NewGameButton_MouseClick(object? sender, MouseEventArgs e)
