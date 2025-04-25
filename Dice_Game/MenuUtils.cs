@@ -9,10 +9,14 @@ namespace Dice_Game
     internal class MenuUtils
     {
         private Game _game;
-        public MenuUtils(Main main, Game game) 
+        public MenuUtils(Game game) 
         {
             _game = game;
-            main.nowaGraToolStripMenuItem.Click += NowaGraToolStripMenuItem_Click;    
+        }
+
+        public void MenuEventsInitialize(Main main)
+        {
+            main.nowaGraToolStripMenuItem.Click += NowaGraToolStripMenuItem_Click;
             main.ToolStripMenuItemAddPlayer1.Click += AddPlayer01ToolStripMenuItem_Click;
             main.ToolStripMenuItemAddPlayer2.Click += AddPlayer02ToolStripMenuItem_Click;
             main.ToolStripMenuItemAddPlayer3.Click += AddPlayer03ToolStripMenuItem_Click;

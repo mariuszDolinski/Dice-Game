@@ -6,7 +6,7 @@ namespace Dice_Game
         private readonly int height100dpi = 446;//671;//558-125 446-100
 
         private Game _game;
-        private MenuUtils _menuUtils;
+        private readonly MenuUtils _menuUtils;
 
         public Main()
         {
@@ -15,7 +15,8 @@ namespace Dice_Game
             int dpi = GetDpi();
             _game = new Game(this, 1.5F, dpi);
             _game.MouseEventsInitalize(this);
-            _menuUtils = new MenuUtils(this, _game);
+            _menuUtils = new MenuUtils(_game);
+            _menuUtils.MenuEventsInitialize(this);
             SetSize(dpi);
             SetDpiMenuButtons();
         }
@@ -23,7 +24,7 @@ namespace Dice_Game
         private void SetSize(int dpi)
         {
             double currentWidth, currentHeight;
-            switch (dpi) 
+            switch (dpi)
             {
                 case 100:
                     currentWidth = (double)144 / 97;
@@ -45,27 +46,25 @@ namespace Dice_Game
                     break;
             }
         }
-
         private int GetDpi()
         {
             if (DeviceDpi < 100) return 100;
             else if (DeviceDpi < 125) return 125;
             else return 150;
         }
-
         private void SetDpiMenuButtons()
         {
             int dpi = GetDpi();
             dpiStripMenuItem100.Checked = false;
             dpiStripMenuItem150.Checked = false;
             dpiStripMenuItem125.Checked = false;
-            switch (dpi) 
+            switch (dpi)
             {
                 case 100:
                     dpiStripMenuItem100.Checked = true; break;
                 case 125:
                     dpiStripMenuItem125.Checked = true; break;
-                default :
+                default:
                     dpiStripMenuItem150.Checked = true; break;
             }
         }
@@ -77,7 +76,6 @@ namespace Dice_Game
             SetSize(150);
             Refresh();
         }
-
         private void dpiStripMenuItem100_Click(object sender, EventArgs e)
         {
             dpiStripMenuItem100.Checked = true;
@@ -86,10 +84,9 @@ namespace Dice_Game
             SetSize(100);
             Refresh();
         }
-
         private void dpiStripMenuItem125_Click(object sender, EventArgs e)
         {
-           SetSize(125);
+            SetSize(125);
             dpiStripMenuItem125.Checked = true;
             dpiStripMenuItem150.Checked = false;
             dpiStripMenuItem100.Checked = false;

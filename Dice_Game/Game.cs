@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Xml.Linq;
 
 namespace Dice_Game
 {
@@ -171,6 +172,11 @@ namespace Dice_Game
                         MessageBox.Show($"Gra zakończona remisem.",
                         "Koniec gry", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                player[i].resetPlayer(false);
             }
         }
 
@@ -597,6 +603,7 @@ namespace Dice_Game
                 {
                     playerName[i].MouseDoubleClick += new MouseEventHandler(playerName_MouseDoubleClick);
                     addPlayerButton[i].MouseClick += new MouseEventHandler(addPlayerButton_MouseClick);
+                    playerTextBox[i].KeyDown += AddPlayer_KeyDown;
                 }
             }
             for (int i = 1; i < ScoreBoard.BoardWidth; i++)
@@ -609,6 +616,19 @@ namespace Dice_Game
                 }
             }
         }
+
+        private void AddPlayer_KeyDown(object? sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                int activeAddPlayerMode = ActiveAddPlayerMode();
+                if (activeAddPlayerMode >= 0)
+                {
+                    AddPlayerAction(activeAddPlayerMode, _main);
+                }
+            }
+        }
+
         public void NewGameButtonClicked()
         {
             if (numberOfPlayers() > 0)
@@ -679,6 +699,16 @@ namespace Dice_Game
                 }
             }
         }
+
+        public int ActiveAddPlayerMode()
+        {
+            for (int i = 0; i < 4; i++) 
+            {
+                if (playerTextBox[i].Visible) return i;
+            }
+
+            return -1;
+        }
         private void ChangePlayerAddMenuText(Main main, int playerNumber, string text)
         {
             switch (playerNumber)
@@ -709,7 +739,7 @@ namespace Dice_Game
                 ShowPlayerTextBox(i);
             }
         }
-        private void addPlayerButton_MouseClick(object? sender, MouseEventArgs e)
+        public void addPlayerButton_MouseClick(object? sender, MouseEventArgs e)
         {
             if (sender != null)
             {

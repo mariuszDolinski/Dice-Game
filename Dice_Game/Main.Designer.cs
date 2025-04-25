@@ -40,8 +40,8 @@
             opcjeToolStripMenuItem = new ToolStripMenuItem();
             skalaDpiToolStripMenuItem = new ToolStripMenuItem();
             dpiStripMenuItem100 = new ToolStripMenuItem();
-            dpiStripMenuItem150 = new ToolStripMenuItem();
             dpiStripMenuItem125 = new ToolStripMenuItem();
+            dpiStripMenuItem150 = new ToolStripMenuItem();
             menuStrip.SuspendLayout();
             SuspendLayout();
             // 
@@ -115,31 +115,31 @@
             // 
             skalaDpiToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { dpiStripMenuItem100, dpiStripMenuItem125, dpiStripMenuItem150 });
             skalaDpiToolStripMenuItem.Name = "skalaDpiToolStripMenuItem";
-            skalaDpiToolStripMenuItem.Size = new Size(270, 34);
+            skalaDpiToolStripMenuItem.Size = new Size(188, 34);
             skalaDpiToolStripMenuItem.Text = "Skala Dpi";
             // 
             // dpiStripMenuItem100
             // 
             dpiStripMenuItem100.Name = "dpiStripMenuItem100";
-            dpiStripMenuItem100.Size = new Size(270, 34);
+            dpiStripMenuItem100.Size = new Size(159, 34);
             dpiStripMenuItem100.Text = "100%";
             dpiStripMenuItem100.Click += dpiStripMenuItem100_Click;
+            // 
+            // dpiStripMenuItem125
+            // 
+            dpiStripMenuItem125.Name = "dpiStripMenuItem125";
+            dpiStripMenuItem125.Size = new Size(159, 34);
+            dpiStripMenuItem125.Text = "125%";
+            dpiStripMenuItem125.Click += dpiStripMenuItem125_Click;
             // 
             // dpiStripMenuItem150
             // 
             dpiStripMenuItem150.Checked = true;
             dpiStripMenuItem150.CheckState = CheckState.Checked;
             dpiStripMenuItem150.Name = "dpiStripMenuItem150";
-            dpiStripMenuItem150.Size = new Size(270, 34);
+            dpiStripMenuItem150.Size = new Size(159, 34);
             dpiStripMenuItem150.Text = "150%";
             dpiStripMenuItem150.Click += dpi150menuClick;
-            // 
-            // dpiStripMenuItem125
-            // 
-            dpiStripMenuItem125.Name = "dpiStripMenuItem125";
-            dpiStripMenuItem125.Size = new Size(270, 34);
-            dpiStripMenuItem125.Text = "125%";
-            dpiStripMenuItem125.Click += dpiStripMenuItem125_Click;
             // 
             // Main
             // 

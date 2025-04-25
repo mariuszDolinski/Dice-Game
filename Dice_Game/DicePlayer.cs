@@ -4,7 +4,7 @@
     {
         public DicePlayer()
         {
-            resetPlayer();
+            resetPlayer(true);
         }
         public int UpperSum { get; set; }
         public int LowerSum { get; set; }
@@ -14,9 +14,9 @@
         public bool Active { get; set; } //indicate if player is currently playing
         public int Yahtzees { get; set; }
 
-        public void resetPlayer()
+        public void resetPlayer(bool mode)
         {
-            Active = false;
+            if(mode) Active = false;
             YahtzeeBonus = 0;
             UpperBonus = 0;
             LowerBonus = 0;
